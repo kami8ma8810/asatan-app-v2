@@ -1,35 +1,96 @@
-import { createSignal } from 'solid-js'
-import solidLogo from './assets/solid.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { type Component, createSignal, For, Show } from "solid-js";
+import { FoodCard } from "./components/FoodCard";
+import { ProteinCounter } from "./components/ProteinCounter";
+import { foodsData, foodCategories, getFoodsByCategory } from "./data/foods";
+import { ProteinCalculator } from "./services/ProteinCalculator";
+import type { Food } from "./models/Food";
+import "./App.css";
 
-function App() {
-  const [count, setCount] = createSignal(0)
+const App: Component = () => {
+  const [selectedFoods, setSelectedFoods] = createSignal<Set<string>>(new Set());
+  const calculator = new ProteinCalculator();
+
+  const totalProtein = () => {
+    const selected = foodsData.filter(food => 
+      selectedFoods().has(food.id)
+    );
+    return calculator.calculate(selected);
+  };
+
+  const handleToggle = (food: Food) => {
+    const newSelected = new Set(selectedFoods());
+    if (newSelected.has(food.id)) {
+      newSelected.delete(food.id);
+    } else {
+      newSelected.add(food.id);
+    }
+    setSelectedFoods(newSelected);
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} class="logo" alt="Vite logo" />
-        </a>
-        <a href="https://solidjs.com" target="_blank">
-          <img src={solidLogo} class="logo solid" alt="Solid logo" />
-        </a>
-      </div>
-      <h1>Vite + Solid</h1>
-      <div class="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count()}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p class="read-the-docs">
-        Click on the Vite and Solid logos to learn more
-      </p>
-    </>
-  )
-}
+    <div class="app">
+      <header class="app-header">
+        <h1 class="app-title">朝たん計算アプリ</h1>
+        <p class="app-subtitle">朝食のタンパク質20gを目指そう！</p>
+      </header>
 
-export default App
+      <main class="app-main">
+        <div class="app-counter-container">
+          <ProteinCounter total={totalProtein()} />
+        </div>
+
+        <div class="app-foods">
+          <For each={foodCategories}>
+            {(category) => (
+              <section class="food-category">
+                <h2 class="category-title">{category}</h2>
+                <div class="food-grid">
+                  <For each={getFoodsByCategory(category)}>
+                    {(food) => (
+                      <FoodCard
+                        food={food}
+                        selected={selectedFoods().has(food.id)}
+                        onToggle={handleToggle}
+                      />
+                    )}
+                  </For>
+                </div>
+              </section>
+            )}
+          </For>
+        </div>
+
+        <Show when={selectedFoods().size > 0}>
+          <div class="selected-foods">
+            <h3 class="selected-foods-title">選択中の食品</h3>
+            <div class="selected-foods-list">
+              <For each={foodsData.filter(f => selectedFoods().has(f.id))}>
+                {(food) => (
+                  <span class="selected-food-item">
+                    {food.name} ({food.protein}g)
+                  </span>
+                )}
+              </For>
+            </div>
+          </div>
+        </Show>
+      </main>
+
+      <footer class="app-footer">
+        <p>© 2024 朝たん計算アプリ v2.0 - Powered by Solid.js</p>
+        <p class="footer-reference">
+          参考文献：
+          <a 
+            href="https://www9.nhk.or.jp/gatten/articles/20211117/index.html"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            NHKガッテン！筋肉増強☆魔法の言葉
+          </a>
+        </p>
+      </footer>
+    </div>
+  );
+};
+
+export default App;
