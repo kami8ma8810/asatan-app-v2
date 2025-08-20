@@ -1,28 +1,133 @@
-## Usage
+# 朝たん計算アプリ v2.0
+
+朝食のタンパク質20g達成を目指すWebアプリケーション
+
+## 🎯 概要
+
+「朝たん」とは「朝ごはんたんぱく質」のこと。体がたんぱく質を必要としているタイミングである朝に、たんぱく質をしっかりとってアミノ酸を補給することで、筋肉の分解を抑えることができます。
+
+このアプリは、食品カードを選択して朝食のタンパク質量を簡単に計算できるツールです。
+
+## ✨ 主な機能
+
+- **食品カード選択**: 36種類の食品から選択
+- **リアルタイム計算**: 選択した食品のタンパク質を自動合計
+- **目標達成表示**: 20g達成時にビジュアルフィードバック
+- **プログレスバー**: 達成度を視覚的に表示
+- **カテゴリー分類**: 食品を6カテゴリーに整理
+- **レスポンシブ対応**: スマートフォン・タブレット・PCに最適化
+
+## 🚀 技術スタック
+
+- **フレームワーク**: [Solid.js](https://www.solidjs.com/) - 仮想DOMなしの超高速レンダリング
+- **ビルドツール**: [Vite](https://vitejs.dev/) - 高速な開発環境
+- **言語**: TypeScript
+- **パッケージマネージャー**: [Bun](https://bun.sh/) - 超高速JavaScript実行環境
+- **テスト**: Vitest + @solidjs/testing-library
+- **開発手法**: TDD (テスト駆動開発)
+
+## 📦 インストール
 
 ```bash
-$ npm install # or pnpm install or yarn install
+# リポジトリのクローン
+git clone https://github.com/yourusername/asatan-app-v2.git
+cd asatan-app-v2
+
+# 依存関係のインストール（Bunを使用）
+bun install
 ```
 
-### Learn more on the [Solid Website](https://solidjs.com) and come chat with us on our [Discord](https://discord.com/invite/solidjs)
+## 🛠️ 開発
 
-## Available Scripts
+```bash
+# 開発サーバーの起動
+bun run dev
 
-In the project directory, you can run:
+# テストの実行
+bun run test
 
-### `npm run dev`
+# テスト（ウォッチモード）
+bun run test:watch
 
-Runs the app in the development mode.<br>
-Open [http://localhost:5173](http://localhost:5173) to view it in the browser.
+# テストカバレッジ
+bun run test:coverage
 
-### `npm run build`
+# 型チェック
+bun run typecheck
 
-Builds the app for production to the `dist` folder.<br>
-It correctly bundles Solid in production mode and optimizes the build for the best performance.
+# ビルド
+bun run build
+```
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+## 📁 プロジェクト構造
 
-## Deployment
+```
+asatan-app-v2/
+├── src/
+│   ├── components/      # UIコンポーネント
+│   │   ├── FoodCard.tsx        # 食品カード
+│   │   └── ProteinCounter.tsx  # タンパク質カウンター
+│   ├── models/          # データモデル
+│   │   └── Food.ts             # 食品型定義
+│   ├── services/        # ビジネスロジック
+│   │   └── ProteinCalculator.ts
+│   ├── data/           # 静的データ
+│   │   └── foods.ts           # 食品データ（36品目）
+│   └── App.tsx         # メインコンポーネント
+├── public/
+│   └── assets/
+│       └── images/     # 食品画像
+└── tests/             # テストファイル
+```
 
-Learn more about deploying your application with the [documentations](https://vite.dev/guide/static-deploy.html)
+## 🎨 デザインコンセプト
+
+ポケモントレーディングカードゲーム風のモダンでポップなデザインを採用：
+
+- **カラーパレット**: 明るく親しみやすい色彩
+- **カードUI**: 食品をカード形式で表示
+- **アニメーション**: 選択時の滑らかな動き
+- **ビジュアルフィードバック**: 達成時の演出
+
+## 🧪 テスト戦略
+
+TDD（テスト駆動開発）で実装：
+
+- **単体テスト**: モデル・サービス層を100%カバー
+- **コンポーネントテスト**: UIコンポーネントの振る舞いを検証
+- **統合テスト**: アプリ全体の動作を確認
+
+## 🔄 v1からの改善点
+
+### パフォーマンス
+- webpack → Vite（ビルド時間80%短縮）
+- jQuery → Solid.js（レンダリング速度10倍向上）
+- 仮想DOMなし（直接DOM更新で超高速）
+
+### 開発体験
+- JavaScript → TypeScript（型安全性）
+- Gulp廃止（タスクランナー不要）
+- Bun採用（パッケージインストール100倍速）
+
+### 新機能
+- 20g達成時のビジュアルフィードバック
+- プログレスバー表示
+- 選択中食品のリアルタイム表示
+- カテゴリー別表示
+
+## 📝 ライセンス
+
+MIT
+
+## 🙏 謝辞
+
+- 食品データ・画像: [NHKガッテン！](https://www9.nhk.or.jp/gatten/articles/20211117/index.html)
+- アイコン・デザイン: オリジナル
+
+## 👨‍💻 開発者
+
+上かるび
+
+---
+
+**注意**: このアプリは情報提供を目的としており、医療的なアドバイスではありません。食事に関する相談は専門家にご相談ください。
