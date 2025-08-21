@@ -1,0 +1,149 @@
+.container {
+  width: 100%;
+  padding: 1rem;
+}
+
+.empty {
+  text-align: center;
+  color: #666;
+  padding: 2rem;
+  font-size: 1.1rem;
+}
+
+.patterns {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+  animation: fadeIn 0.3s ease-in;
+}
+
+.patternCard {
+  background: white;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.patternCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  border-color: #ffcb05;
+}
+
+.patternCard.selected {
+  background: linear-gradient(135deg, #fff9e6 0%, #fff3cc 100%);
+  border-color: #ffcb05;
+  box-shadow: 0 0 0 3px rgba(255, 203, 5, 0.2);
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.info {
+  flex: 1;
+}
+
+.name {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 0.25rem;
+}
+
+.description {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.protein {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.25rem 0.5rem;
+  background: #f0f0f0;
+  border-radius: 8px;
+  min-width: 60px;
+}
+
+.proteinValue {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #2c5aa0;
+}
+
+.proteinLabel {
+  font-size: 0.7rem;
+  color: #666;
+  margin-top: 0.1rem;
+}
+
+.foods {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.foodItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  background: #f8f8f8;
+  border-radius: 16px;
+  font-size: 0.85rem;
+}
+
+.foodName {
+  color: #333;
+  font-weight: 500;
+}
+
+.foodProtein {
+  color: #666;
+  font-size: 0.8rem;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .patterns {
+    grid-template-columns: 1fr;
+  }
+  
+  .patternCard {
+    padding: 0.875rem;
+  }
+  
+  .header {
+    gap: 0.5rem;
+  }
+  
+  .icon {
+    font-size: 1.5rem;
+  }
+}

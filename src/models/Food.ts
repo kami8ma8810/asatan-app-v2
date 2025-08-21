@@ -3,6 +3,8 @@ export interface Food {
   name: string;
   protein: number;
   imageUrl: string;
+  unit?: string;
+  category?: 'grain' | 'dairy' | 'meat' | 'fish' | 'egg' | 'soy' | 'vegetable' | 'fruit' | 'other';
 }
 
 let idCounter = 0;
@@ -10,7 +12,9 @@ let idCounter = 0;
 export function createFood(
   name: string,
   protein: number,
-  imageFileName: string
+  imageFileName: string,
+  unit?: string,
+  category?: Food['category']
 ): Food {
   const id = `food-${Date.now()}-${++idCounter}`;
   
@@ -24,5 +28,7 @@ export function createFood(
     name,
     protein,
     imageUrl,
+    unit,
+    category,
   };
 }
