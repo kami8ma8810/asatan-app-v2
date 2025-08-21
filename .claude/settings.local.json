@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__obsidian-mcp-tools__list_vault_files",
+      "mcp__obsidian-mcp-tools__create_vault_file",
+      "mcp__obsidian-mcp-tools__show_file_in_obsidian",
+      "mcp__serena-mcp-server__list_memories",
+      "mcp__serena-mcp-server__activate_project",
+      "mcp__serena-mcp-server__check_onboarding_performed",
+      "mcp__serena-mcp-server__onboarding",
+      "mcp__serena-mcp-server__list_dir",
+      "mcp__serena-mcp-server__write_memory",
+      "mcp__serena-mcp-server__get_symbols_overview",
+      "Bash(mkdir:*)",
+      "Bash(bun run:*)",
+      "Bash(bun install:*)",
+      "mcp__serena-mcp-server__search_for_pattern",
+      "mcp__serena-mcp-server__find_symbol",
+      "mcp__serena-mcp-server__replace_symbol_body",
+      "Bash(rm:*)",
+      "Bash(curl:*)",
+      "Bash(sqlite3:*)",
+      "Bash(git add:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
