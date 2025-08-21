@@ -16,21 +16,21 @@ graph TB
         A[Solid.js SPA]
         B[Vite Dev Server]
     end
-    
+
     subgraph "バックエンド"
         C[Bun + Hono API Server]
         D[SQLite Database]
         E[Import Scripts]
     end
-    
+
     subgraph "データソース"
         F[文部科学省<br/>食品成分データベース]
     end
-    
+
     subgraph "自動化"
         G[GitHub Actions<br/>月次更新]
     end
-    
+
     A -->|REST API| C
     C --> D
     E --> D
@@ -242,11 +242,11 @@ jobs:
       - name: Download Latest Data
         run: |
           # 文科省サイトから最新データをダウンロード
-          
+
       - name: Import to Database
         run: |
           # SQLiteデータベースに自動インポート
-          
+
       - name: Generate Meal Patterns
         run: |
           # 献立パターンを自動生成（各食品×3パターン以上）
@@ -343,7 +343,7 @@ MIT
 
 ## 👨‍💻 開発者
 
-上かるび
+上かるび（Hayato Kamiyama/Kamy Hank）
 
 ---
 
