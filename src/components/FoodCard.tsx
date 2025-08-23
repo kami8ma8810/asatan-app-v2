@@ -32,27 +32,23 @@ export const FoodCard: Component<FoodCardProps> = (props) => {
         <Show when={props.selected}>
           <div class="food-card__check" data-testid="check-icon">
             <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
+              width="32"
+              height="32"
+              viewBox="0 0 32 32"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
             >
-              <circle cx="12" cy="12" r="12" fill="#4CAF50" />
+              <circle cx="16" cy="16" r="16" fill="#4CAF50" />
               <path
-                d="M8 12.5L10.5 15L16 9"
+                d="M10 16L14 20L22 12"
                 stroke="white"
-                stroke-width="2"
+                stroke-width="3"
                 stroke-linecap="round"
                 stroke-linejoin="round"
               />
             </svg>
           </div>
         </Show>
-      </div>
-      <div class="food-card__info">
-        <h3 class="food-card__name">{props.food.name}</h3>
-        <p class="food-card__protein">{props.food.protein}g</p>
       </div>
     </button>
   );
