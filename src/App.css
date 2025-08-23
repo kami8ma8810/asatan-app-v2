@@ -38,6 +38,14 @@
   top: 20px;
   z-index: 10;
   margin-bottom: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.app-share-button {
+  flex-shrink: 0;
 }
 
 .app-foods {

@@ -1,6 +1,7 @@
 import { type Component, createSignal, For, Show } from "solid-js";
 import { FoodCard } from "./components/FoodCard";
 import { ProteinCounter } from "./components/ProteinCounter";
+import { ShareButton } from "./components/ShareButton";
 import { foodsData, foodCategories, getFoodsByCategory } from "./data/foods";
 import { ProteinCalculator } from "./services/ProteinCalculator";
 import type { Food } from "./models/Food";
@@ -37,6 +38,14 @@ const App: Component = () => {
       <main class="app-main">
         <div class="app-counter-container">
           <ProteinCounter total={totalProtein()} />
+          <div class="app-share-button">
+            <ShareButton 
+              selectedFoods={foodsData.filter(food => selectedFoods().has(food.id))}
+              targetProtein={20}
+              generateImage={true}
+              useWebShareApi={true}
+            />
+          </div>
         </div>
 
         <div class="app-foods">
