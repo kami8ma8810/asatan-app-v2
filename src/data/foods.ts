@@ -18,7 +18,7 @@ export const foodsData: Food[] = [
   // 魚介類
   createFood("ししゃも", 2, "item11.jpg", "2尾", "fish"),
   createFood("ツナ缶", 4, "item12.jpg", "1缶", "fish"),
-  createFood("さば", 4, "item15.jpg", "1切れ", "fish"),
+  createFood("さば", 4, "item13.jpg", "1切れ", "fish"),
   createFood("さけ", 5, "item16.jpg", "1切れ", "fish"),
   createFood("さけフレーク", 6, "item17.jpg", "大さじ2", "fish"),
   createFood("魚肉ソーセージ", 7, "item18.jpg", "1本", "fish"),
