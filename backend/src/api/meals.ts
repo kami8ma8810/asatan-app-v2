@@ -41,7 +41,7 @@ mealsRouter.get('/patterns', async (c) => {
     let sql = `
       SELECT DISTINCT
         mp.*,
-        GROUP_CONCAT(
+        json_group_array(
           json_object(
             'food_id', mpf.food_id,
             'quantity', mpf.quantity,
@@ -64,7 +64,7 @@ mealsRouter.get('/patterns', async (c) => {
       sql = `
         SELECT DISTINCT
           mp.*,
-          GROUP_CONCAT(
+          json_group_array(
             json_object(
               'food_id', mpf2.food_id,
               'quantity', mpf2.quantity,
@@ -108,7 +108,7 @@ mealsRouter.get('/patterns', async (c) => {
     // JSONデータのパース
     const formattedPatterns = patterns.map(pattern => {
       const foods = pattern.foods_json ? 
-        pattern.foods_json.split(',').map((json: string) => JSON.parse(json)) : 
+        JSON.parse(pattern.foods_json) : 
         [];
       
       return {

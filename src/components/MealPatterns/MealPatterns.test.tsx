@@ -1,140 +1,209 @@
-import { describe, it, expect, vi } from 'vitest';
-import { render, screen, fireEvent } from '@solidjs/testing-library';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { render, screen, waitFor, fireEvent } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
 import { MealPatterns } from './MealPatterns';
-import type { MealPattern } from '../../models/MealPattern';
-import type { Food } from '../../models/Food';
+import { MealPatternsService } from '../../services/MealPatternsService';
+import type { MealPatternsResponse } from '../../types/MealPattern';
+
+vi.mock('../../services/MealPatternsService');
+
+const mockPatternsResponse: MealPatternsResponse = {
+  patterns: [
+    {
+      id: 'pattern_1',
+      name: 'サラダチキン中心の朝食',
+      description: 'サラダチキンをメインにしたシンプルな朝食（108kcal）',
+      total_protein: 21.7,
+      total_energy: 108,
+      total_fat: 1.5,
+      total_carbs: 0.1,
+      pfc_score: 0,
+      category: 'single',
+      tags: null,
+      icon: null,
+      popularity: 0,
+      is_auto_generated: 0,
+      main_food_id: null,
+      created_at: '2025-08-21 09:48:09',
+      updated_at: '2025-08-21 09:48:09',
+      foods: [
+        {
+          food_id: 'chicken_salad_1',
+          quantity: 1,
+          serving_size: null,
+          food_name: 'サラダチキン',
+          food_protein: 21.7,
+        },
+      ],
+    },
+    {
+      id: 'pattern_2',
+      name: '和朝食セット（ご飯・納豆・卵）',
+      description: '定番の和食スタイル（443kcal, P:18.3g, F:11.7g, C:62.0g）',
+      total_protein: 18.3,
+      total_energy: 443,
+      total_fat: 11.7,
+      total_carbs: 62.0,
+      pfc_score: 97.37,
+      category: 'japanese',
+      tags: null,
+      icon: null,
+      popularity: 0,
+      is_auto_generated: 0,
+      main_food_id: null,
+      created_at: '2025-08-21 09:48:09',
+      updated_at: '2025-08-21 09:48:09',
+      foods: [
+        {
+          food_id: 'egg_1',
+          quantity: 1,
+          serving_size: null,
+          food_name: '卵（1個）',
+          food_protein: 6.2,
+        },
+        {
+          food_id: 'natto_1',
+          quantity: 1,
+          serving_size: null,
+          food_name: '納豆（1パック）',
+          food_protein: 8.3,
+        },
+        {
+          food_id: 'rice_1',
+          quantity: 1,
+          serving_size: null,
+          food_name: 'ご飯（茶碗1杯）',
+          food_protein: 3.8,
+        },
+      ],
+    },
+  ],
+  pagination: {
+    limit: 20,
+    offset: 0,
+    hasMore: false,
+  },
+};
 
 describe('MealPatterns', () => {
-  const mockFoods: Food[] = [
-    { id: 'rice', name: 'ご飯', protein: 4.0, unit: '茶碗1杯', category: 'grain', imageUrl: '/images/rice.png' },
-    { id: 'natto', name: '納豆', protein: 8.3, unit: '1パック', category: 'soy', imageUrl: '/images/natto.png' },
-    { id: 'egg', name: '卵', protein: 6.2, unit: '1個', category: 'egg', imageUrl: '/images/egg.png' },
-    { id: 'miso-soup', name: '味噌汁', protein: 2.0, unit: '1杯', category: 'other', imageUrl: '/images/miso-soup.png' },
-    { id: 'bread', name: 'パン', protein: 5.0, unit: '1枚', category: 'grain', imageUrl: '/images/bread.png' },
-    { id: 'cheese', name: 'チーズ', protein: 4.5, unit: '1枚', category: 'dairy', imageUrl: '/images/cheese.png' },
-    { id: 'ham', name: 'ハム', protein: 3.5, unit: '2枚', category: 'meat', imageUrl: '/images/ham.png' },
-    { id: 'milk', name: '牛乳', protein: 6.6, unit: '200ml', category: 'dairy', imageUrl: '/images/milk.png' },
-    { id: 'yogurt', name: 'ヨーグルト', protein: 4.3, unit: '100g', category: 'dairy', imageUrl: '/images/yogurt.png' },
-    { id: 'granola', name: 'グラノーラ', protein: 3.0, unit: '50g', category: 'grain', imageUrl: '/images/granola.png' },
-    { id: 'banana', name: 'バナナ', protein: 1.1, unit: '1本', category: 'other', imageUrl: '/images/banana.png' },
-  ];
-
-  const mockPatterns: MealPattern[] = [
-    {
-      id: 'japanese-set',
-      name: '和食セット',
-      description: '定番の和朝食',
-      foods: [mockFoods[0], mockFoods[1], mockFoods[2], mockFoods[3]],
-      totalProtein: 20.5,
-      category: 'japanese',
-      icon: '🍚'
-    },
-    {
-      id: 'western-set',
-      name: '洋食セット',
-      description: 'パンとハムチーズ',
-      foods: [mockFoods[4], mockFoods[5], mockFoods[6], mockFoods[7]],
-      totalProtein: 19.6,
-      category: 'western',
-      icon: '🥖'
-    },
-    {
-      id: 'yogurt-set',
-      name: 'ヨーグルトセット',
-      description: 'ヨーグルトとグラノーラ',
-      foods: [mockFoods[8], mockFoods[9], mockFoods[10], mockFoods[7]],
-      totalProtein: 15.0,
-      category: 'yogurt',
-      icon: '🥛'
-    }
-  ];
-
-  it('献立パターンのリストを表示する', () => {
-    const onSelectPattern = vi.fn();
-    render(() => <MealPatterns patterns={mockPatterns} onSelectPattern={onSelectPattern} />);
-
-    expect(screen.getByText('和食セット')).toBeInTheDocument();
-    expect(screen.getByText('洋食セット')).toBeInTheDocument();
-    expect(screen.getByText('ヨーグルトセット')).toBeInTheDocument();
+  beforeEach(() => {
+    vi.clearAllMocks();
   });
 
-  it('各献立の詳細情報を表示する', () => {
-    const onSelectPattern = vi.fn();
-    render(() => <MealPatterns patterns={mockPatterns} onSelectPattern={onSelectPattern} />);
+  it('献立パターンを表示する', async () => {
+    vi.mocked(MealPatternsService.fetchPatterns).mockResolvedValue(mockPatternsResponse);
 
-    expect(screen.getByText('定番の和朝食')).toBeInTheDocument();
-    expect(screen.getByText('20.5g')).toBeInTheDocument();
-    
-    expect(screen.getByText('パンとハムチーズ')).toBeInTheDocument();
-    expect(screen.getByText('19.6g')).toBeInTheDocument();
+    render(() => <MealPatterns onSelect={() => {}} />);
+
+    await waitFor(() => {
+      expect(screen.getByText('献立パターン')).toBeInTheDocument();
+      expect(screen.getByText('サラダチキン中心の朝食')).toBeInTheDocument();
+      expect(screen.getByText('和朝食セット（ご飯・納豆・卵）')).toBeInTheDocument();
+    });
   });
 
-  it('献立に含まれる食品を表示する', () => {
-    const onSelectPattern = vi.fn();
-    render(() => <MealPatterns patterns={mockPatterns} onSelectPattern={onSelectPattern} />);
+  it('献立パターンの詳細情報を表示する', async () => {
+    vi.mocked(MealPatternsService.fetchPatterns).mockResolvedValue(mockPatternsResponse);
 
-    expect(screen.getByText('ご飯')).toBeInTheDocument();
-    expect(screen.getByText('納豆')).toBeInTheDocument();
-    expect(screen.getByText('卵')).toBeInTheDocument();
-    expect(screen.getByText('味噌汁')).toBeInTheDocument();
+    render(() => <MealPatterns onSelect={() => {}} />);
+
+    await waitFor(() => {
+      expect(screen.getByText('21.7g')).toBeInTheDocument();
+      expect(screen.getByText('108kcal')).toBeInTheDocument();
+      expect(screen.getByText('18.3g')).toBeInTheDocument();
+      expect(screen.getByText('443kcal')).toBeInTheDocument();
+    });
   });
 
-  it('献立をクリックすると選択イベントが発火する', () => {
-    const onSelectPattern = vi.fn();
-    render(() => <MealPatterns patterns={mockPatterns} onSelectPattern={onSelectPattern} />);
+  it('カテゴリーフィルターが機能する', async () => {
+    vi.mocked(MealPatternsService.fetchPatterns).mockResolvedValue(mockPatternsResponse);
 
-    const japaneseSet = screen.getByTestId('pattern-japanese-set');
-    fireEvent.click(japaneseSet);
+    render(() => <MealPatterns onSelect={() => {}} />);
 
-    expect(onSelectPattern).toHaveBeenCalledWith(mockPatterns[0]);
+    await waitFor(() => {
+      const japaneseFilter = screen.getByRole('button', { name: /和食/i });
+      expect(japaneseFilter).toBeInTheDocument();
+    });
+
+    const japaneseFilter = screen.getByRole('button', { name: /和食/i });
+    fireEvent.click(japaneseFilter);
+
+    await waitFor(() => {
+      expect(MealPatternsService.fetchPatterns).toHaveBeenCalledWith(
+        expect.objectContaining({ category: 'japanese' })
+      );
+    });
   });
 
-  it('複数の献立を選択できる', () => {
-    const onSelectPattern = vi.fn();
-    render(() => <MealPatterns patterns={mockPatterns} onSelectPattern={onSelectPattern} />);
+  it('献立を選択できる', async () => {
+    vi.mocked(MealPatternsService.fetchPatterns).mockResolvedValue(mockPatternsResponse);
+    const onSelect = vi.fn();
 
-    const japaneseSet = screen.getByTestId('pattern-japanese-set');
-    const westernSet = screen.getByTestId('pattern-western-set');
+    render(() => <MealPatterns onSelect={onSelect} />);
 
-    fireEvent.click(japaneseSet);
-    fireEvent.click(westernSet);
+    await waitFor(() => {
+      const selectButton = screen.getAllByRole('button', { name: /選択/i })[0];
+      expect(selectButton).toBeInTheDocument();
+    });
 
-    expect(onSelectPattern).toHaveBeenCalledTimes(2);
-    expect(onSelectPattern).toHaveBeenNthCalledWith(1, mockPatterns[0]);
-    expect(onSelectPattern).toHaveBeenNthCalledWith(2, mockPatterns[1]);
+    const selectButton = screen.getAllByRole('button', { name: /選択/i })[0];
+    fireEvent.click(selectButton);
+
+    expect(onSelect).toHaveBeenCalledWith(mockPatternsResponse.patterns[0]);
   });
 
-  it('選択された献立にスタイルが適用される', () => {
-    const onSelectPattern = vi.fn();
-    const { rerender } = render(() => 
-      <MealPatterns 
-        patterns={mockPatterns} 
-        selectedPatternIds={['japanese-set']}
-        onSelectPattern={onSelectPattern} 
-      />
+  it('ローディング状態を表示する', () => {
+    vi.mocked(MealPatternsService.fetchPatterns).mockImplementation(
+      () => new Promise(() => {}) // Never resolves
     );
 
-    const japaneseSet = screen.getByTestId('pattern-japanese-set');
-    expect(japaneseSet).toHaveClass('selected');
+    render(() => <MealPatterns onSelect={() => {}} />);
 
-    const westernSet = screen.getByTestId('pattern-western-set');
-    expect(westernSet).not.toHaveClass('selected');
+    expect(screen.getByText('読み込み中...')).toBeInTheDocument();
   });
 
-  it('カテゴリーごとにアイコンが表示される', () => {
-    const onSelectPattern = vi.fn();
-    render(() => <MealPatterns patterns={mockPatterns} onSelectPattern={onSelectPattern} />);
+  it('エラー状態を表示する', async () => {
+    vi.mocked(MealPatternsService.fetchPatterns).mockRejectedValue(
+      new Error('Failed to fetch')
+    );
 
-    expect(screen.getByText('🍚')).toBeInTheDocument();
-    expect(screen.getByText('🥖')).toBeInTheDocument();
-    expect(screen.getByText('🥛')).toBeInTheDocument();
+    render(() => <MealPatterns onSelect={() => {}} />);
+
+    await waitFor(() => {
+      expect(screen.getByText(/エラーが発生しました/i)).toBeInTheDocument();
+    });
   });
 
-  it('献立がない場合は空の状態を表示する', () => {
-    const onSelectPattern = vi.fn();
-    render(() => <MealPatterns patterns={[]} onSelectPattern={onSelectPattern} />);
+  it('食品ごとのタンパク質量を表示する', async () => {
+    vi.mocked(MealPatternsService.fetchPatterns).mockResolvedValue(mockPatternsResponse);
 
-    expect(screen.getByText('献立パターンがありません')).toBeInTheDocument();
+    render(() => <MealPatterns onSelect={() => {}} />);
+
+    await waitFor(() => {
+      expect(screen.getByText('サラダチキン')).toBeInTheDocument();
+      expect(screen.getByText('卵（1個）')).toBeInTheDocument();
+      expect(screen.getByText('納豆（1パック）')).toBeInTheDocument();
+      expect(screen.getByText('ご飯（茶碗1杯）')).toBeInTheDocument();
+    });
+  });
+
+  it('人気順でソートできる', async () => {
+    vi.mocked(MealPatternsService.fetchPatterns).mockResolvedValue(mockPatternsResponse);
+
+    render(() => <MealPatterns onSelect={() => {}} />);
+
+    await waitFor(() => {
+      const sortButton = screen.getByRole('button', { name: /タンパク質順/i });
+      expect(sortButton).toBeInTheDocument();
+    });
+
+    const sortButton = screen.getByRole('button', { name: /タンパク質順/i });
+    fireEvent.click(sortButton);
+
+    await waitFor(() => {
+      expect(MealPatternsService.fetchPatterns).toHaveBeenCalledWith(
+        expect.objectContaining({ popular: true })
+      );
+    });
   });
 });
