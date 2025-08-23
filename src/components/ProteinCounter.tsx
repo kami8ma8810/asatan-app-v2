@@ -1,4 +1,4 @@
-import { Component, createMemo, Show } from "solid-js";
+import { type Component, createMemo, Show } from "solid-js";
 import "./ProteinCounter.css";
 
 interface ProteinCounterProps {
@@ -15,9 +15,11 @@ export const ProteinCounter: Component<ProteinCounterProps> = (props) => {
   );
 
   return (
-    <div class={`protein-counter ${isAchieved() ? "achieved" : ""}`}>
+    <div class={`protein-counter ${isAchieved() ? "achieved counter-achieved" : ""}`}>
       <div class="protein-counter__header">
-        <h2 class="protein-counter__title">現在のタンパク質: {props.total}g</h2>
+        <h2 class="protein-counter__title">
+          現在のタンパク質: <span class="counter-total">{props.total.toFixed(1)}g</span>
+        </h2>
         <Show when={isAchieved()}>
           <span class="protein-counter__achievement">🎉 目標達成！</span>
         </Show>

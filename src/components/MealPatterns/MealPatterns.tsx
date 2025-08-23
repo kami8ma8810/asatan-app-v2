@@ -1,4 +1,4 @@
-import { Component, createSignal, createEffect, For, Show } from 'solid-js';
+import { type Component, createSignal, createEffect, For, Show } from 'solid-js';
 import { MealPatternsService } from '../../services/MealPatternsService';
 import type { MealPattern } from '../../types/MealPattern';
 import styles from './MealPatterns.module.css';

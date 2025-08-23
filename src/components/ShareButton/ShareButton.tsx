@@ -1,4 +1,4 @@
-import { Component, createSignal, Show, For } from 'solid-js';
+import { type Component, createSignal, Show, For } from 'solid-js';
 import type { Food } from '../../models/Food';
 import styles from './ShareButton.module.css';
 
