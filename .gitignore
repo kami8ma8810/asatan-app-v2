@@ -30,3 +30,12 @@ bun.lockb
 # Coverage
 coverage
 .nyc_output
+
+# Testing
+test-results/
+playwright-report/
+e2e/screenshots/
+*.png
+
+# Claude
+.claude/settings.local.json
