@@ -18,7 +18,6 @@
 /* Hover state with elevation change */
 .food-card:hover {
   box-shadow: var(--shadow-elevation-3);
-  transform: translateY(-2px);
 }
 
 /* Selected state with morning glow */
@@ -27,6 +26,7 @@
     var(--shadow-elevation-3),
     0 0 0 2px var(--color-primary),
     0 0 16px rgba(255, 149, 0, 0.2);
+  z-index: 1; /* 選択状態でも低いz-indexを維持 */
 }
 
 /* Ripple effect removed for cleaner interaction */
@@ -49,7 +49,7 @@
 }
 
 .food-card:hover .food-card__image {
-  transform: scale(1.05);
+  /* Scale removed for consistent sizing */
 }
 
 /* Check mark with Material FAB style */
@@ -66,6 +66,7 @@
   justify-content: center;
   box-shadow: var(--shadow-elevation-3);
   animation: checkIn var(--duration-medium) var(--easing-decelerate);
+  z-index: 1; /* カード内での相対的な階層 */
 }
 
 .food-card__check svg {
@@ -145,7 +146,6 @@
 }
 
 .food-card:disabled:hover {
-  transform: none;
   box-shadow: none;
 }
 

@@ -354,7 +354,6 @@
 
 .removeButton:hover {
   opacity: 1;
-  transform: scale(1.1);
 }
 
 /* Summary */
@@ -373,7 +372,7 @@
 }
 
 .summaryValue {
-  color: var(--color-primary);
+  color: var(--color-primary-accessible);
   font-weight: var(--font-weight-bold);
   font-size: var(--font-size-headline-small);
 }

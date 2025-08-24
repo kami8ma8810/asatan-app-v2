@@ -44,28 +44,7 @@
   overflow: hidden;
 }
 
-/* Ripple effect */
-.categoryFilters button::after,
-.sortOptions button::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  border-radius: 50%;
-  background: var(--color-primary);
-  opacity: 0.1;
-  transform: translate(-50%, -50%);
-  transition: width var(--duration-medium) var(--easing-standard),
-              height var(--duration-medium) var(--easing-standard);
-}
-
-.categoryFilters button:active::after,
-.sortOptions button:active::after {
-  width: 100px;
-  height: 100px;
-}
+/* Ripple effect removed for cleaner interaction */
 
 .categoryFilters button:hover,
 .sortOptions button:hover {
@@ -118,7 +97,6 @@
 }
 
 .patternCard:hover {
-  transform: translateY(-2px);
   box-shadow: var(--shadow-elevation-3);
 }
 
@@ -267,34 +245,15 @@
   overflow: hidden;
 }
 
-/* Ripple effect for button */
-.selectButton::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.3);
-  transform: translate(-50%, -50%);
-  transition: width var(--duration-long) var(--easing-standard),
-              height var(--duration-long) var(--easing-standard);
-}
-
-.selectButton:active::after {
-  width: 300px;
-  height: 300px;
-}
+/* Ripple effect removed for button */
 
 .selectButton:hover {
   background: var(--color-primary-dark);
-  transform: translateY(-1px);
   box-shadow: var(--shadow-elevation-3);
 }
 
 .selectButton:active {
-  transform: translateY(0);
+  /* Active state without transform */
 }
 
 .selectButton:focus-visible {
@@ -306,11 +265,9 @@
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(16px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
   }
 }
 
