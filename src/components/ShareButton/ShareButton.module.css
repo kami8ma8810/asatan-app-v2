@@ -5,7 +5,7 @@
   justify-content: center;
   gap: var(--spacing-2);
   padding: var(--spacing-2) var(--spacing-4);
-  background: var(--color-primary);
+  background: var(--color-primary-accessible);
   color: var(--color-on-primary);
   border: none;
   border-radius: var(--radius-full);
@@ -20,29 +20,12 @@
   overflow: hidden;
 }
 
-/* Ripple effect on click */
-.shareButton::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.3);
-  transform: translate(-50%, -50%);
-  transition: width var(--duration-long) var(--easing-standard),
-              height var(--duration-long) var(--easing-standard);
-}
-
-.shareButton:active::after {
-  width: 200px;
-  height: 200px;
-}
+/* Ripple effect removed for cleaner interaction */
 
 .shareButton:hover:not(:disabled) {
   box-shadow: var(--shadow-elevation-3);
   background: var(--color-primary-dark);
+  filter: brightness(0.9);
 }
 
 .shareButton:focus-visible {
@@ -64,7 +47,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: var(--z-index-modal);
+  z-index: 9999; /* 最上位に設定 */
   animation: fadeIn var(--duration-short) var(--easing-standard);
   backdrop-filter: blur(4px);
 }
@@ -81,6 +64,8 @@
   animation: slideUpScale var(--duration-medium) var(--easing-decelerate);
   display: flex;
   flex-direction: column;
+  position: relative;
+  z-index: 10000; /* オーバーレイより上に */
 }
 
 @keyframes slideUpScale {
@@ -131,6 +116,11 @@
   color: var(--color-on-surface);
 }
 
+.closeButton svg {
+  width: 24px;
+  height: 24px;
+}
+
 .closeButton:focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: -2px;
@@ -179,44 +169,34 @@
   justify-content: center;
   gap: var(--spacing-2);
   padding: var(--spacing-4) var(--spacing-3);
-  background: var(--color-surface);
+  background: #ffffff;
   border: 1px solid var(--color-outline);
   border-radius: var(--radius-medium);
   cursor: pointer;
   transition: all var(--duration-short) var(--easing-standard);
   font-size: var(--font-size-label-large);
-  font-weight: var(--font-weight-medium);
+  font-weight: 600;
   color: var(--color-on-surface);
   min-height: 64px;
   position: relative;
   overflow: hidden;
 }
 
-/* Ripple effect for share options */
-.shareOption::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  border-radius: 50%;
-  background: currentColor;
-  opacity: 0.1;
-  transform: translate(-50%, -50%);
-  transition: width var(--duration-medium) var(--easing-standard),
-              height var(--duration-medium) var(--easing-standard);
+.shareOption svg {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
 }
 
-.shareOption:active::before {
-  width: 150px;
-  height: 150px;
+.shareOption span {
+  margin-top: var(--spacing-1);
 }
+
+/* Ripple effect removed for share options */
 
 .shareOption:hover {
   background: var(--color-surface-variant);
   border-color: var(--color-primary);
-  transform: translateY(-2px);
   box-shadow: var(--shadow-elevation-2);
 }
 
@@ -225,45 +205,57 @@
   outline-offset: -2px;
 }
 
-/* Platform-specific colors with morning theme */
+/* Platform-specific colors with morning theme - WCAG AA compliant */
 .shareOption.twitter {
-  border-color: #1da1f2;
-  color: #1da1f2;
+  border-color: #1a5490;
+  color: #1a5490;
+  border-width: 2px;
+  font-weight: 600;
 }
 
 .shareOption.twitter:hover {
-  background: rgba(29, 161, 242, 0.08);
-  border-width: 2px;
+  background: #f0f7ff;
+  border-color: #0d3d70;
+  color: #0d3d70;
 }
 
 .shareOption.line {
-  border-color: #00c300;
-  color: #00c300;
+  border-color: #0b6e0b;
+  color: #0b6e0b;
+  border-width: 2px;
+  font-weight: 600;
 }
 
 .shareOption.line:hover {
-  background: rgba(0, 195, 0, 0.08);
-  border-width: 2px;
+  background: #f0fff0;
+  border-color: #064f06;
+  color: #064f06;
 }
 
 .shareOption.image {
-  border-color: var(--color-tertiary);
-  color: var(--color-tertiary);
+  border-color: #8b3a00;
+  color: #8b3a00;
+  border-width: 2px;
+  font-weight: 600;
 }
 
 .shareOption.image:hover {
-  background: var(--color-tertiary-light);
-  border-width: 2px;
+  background: #fff5f0;
+  border-color: #662a00;
+  color: #662a00;
 }
 
-.shareOption.native {
-  border-color: var(--color-secondary);
-  color: var(--color-secondary);
+.shareOption.email {
+  border-color: #7a5000;
+  color: #7a5000;
+  border-width: 2px;
+  font-weight: 600;
 }
 
-.shareOption.native:hover {
-  background: var(--color-secondary-light);
-  border-width: 2px;
+.shareOption.email:hover {
+  background: #fffaf0;
+  border-color: #5c3c00;
+  color: #5c3c00;
 }
 
 /* Generated Image Container */
@@ -331,4 +323,25 @@
     justify-content: flex-start;
     padding: var(--spacing-3) var(--spacing-4);
   }
+  
+  .shareOption svg {
+    margin-right: var(--spacing-2);
+  }
+  
+  .shareOption span {
+    margin-top: 0;
+  }
+}
+
+/* Screen reader only class */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }
