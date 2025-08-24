@@ -1,62 +1,86 @@
+/* App Container */
 .app {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--color-background);
 }
 
+/* App Bar (Material Design Top App Bar) */
 .app-header {
-  background: white;
-  padding: 20px;
-  text-align: center;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-elevation-2);
+  padding: var(--spacing-4) var(--spacing-5);
+  position: sticky;
+  top: 0;
+  z-index: var(--z-index-sticky);
+  transition: box-shadow var(--duration-short) var(--easing-standard);
+}
+
+.app-header:hover {
+  box-shadow: var(--shadow-elevation-3);
 }
 
 .app-title {
-  font-size: 32px;
-  font-weight: bold;
-  color: #333;
-  margin: 0 0 8px 0;
+  font-size: var(--font-size-headline-medium);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
 }
+
+/* Remove emoji - clean design */
 
 .app-subtitle {
-  font-size: 16px;
-  color: #666;
-  margin: 0;
+  font-size: var(--font-size-body-medium);
+  color: var(--color-on-surface-variant);
+  margin: var(--spacing-1) 0 0 0;
 }
 
+/* Main Content Area */
 .app-main {
   flex: 1;
-  padding: 20px;
-  max-width: 1200px;
+  padding: var(--spacing-5);
+  max-width: 1280px;
   width: 100%;
   margin: 0 auto;
 }
 
+/* Counter Container with Material Elevation */
 .app-counter-container {
   position: sticky;
-  top: 20px;
-  z-index: 10;
-  margin-bottom: 24px;
+  top: calc(64px + var(--spacing-4));
+  z-index: var(--z-index-sticky);
+  margin-bottom: var(--spacing-6);
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 1rem;
+  gap: var(--spacing-4);
 }
 
 .app-share-button {
   flex-shrink: 0;
 }
 
+/* Foods Container - Material Surface */
 .app-foods {
-  background: white;
-  border-radius: 12px;
-  padding: 24px;
-  margin-bottom: 24px;
+  background: var(--color-surface);
+  border-radius: var(--radius-large);
+  padding: var(--spacing-6);
+  margin-bottom: var(--spacing-6);
+  box-shadow: var(--shadow-elevation-1);
+  transition: all var(--duration-medium) var(--easing-standard);
 }
 
+.app-foods:hover {
+  box-shadow: var(--shadow-elevation-2);
+}
+
+/* Food Category Section */
 .food-category {
-  margin-bottom: 32px;
+  margin-bottom: var(--spacing-8);
 }
 
 .food-category:last-child {
@@ -64,89 +88,138 @@
 }
 
 .category-title {
-  font-size: 20px;
-  font-weight: bold;
-  color: #333;
-  margin: 0 0 16px 0;
-  padding-bottom: 8px;
-  border-bottom: 2px solid #e0e0e0;
+  font-size: var(--font-size-title-large);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-on-surface);
+  margin: 0 0 var(--spacing-4) 0;
+  padding-bottom: var(--spacing-2);
+  border-bottom: 2px solid var(--color-primary);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
 }
 
+/* Clean category titles without emoji */
+
+/* Food Grid - Responsive Material Grid */
 .food-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 16px;
-  margin-bottom: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: var(--spacing-4);
+  margin-bottom: var(--spacing-4);
 }
 
+/* Selected Foods Chip Container */
 .selected-foods {
-  background: white;
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 24px;
+  background: var(--color-surface);
+  border-radius: var(--radius-large);
+  padding: var(--spacing-5);
+  margin-bottom: var(--spacing-6);
+  box-shadow: var(--shadow-elevation-1);
 }
 
 .selected-foods-title {
-  font-size: 18px;
-  font-weight: bold;
-  color: #333;
-  margin: 0 0 12px 0;
+  font-size: var(--font-size-title-medium);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-on-surface);
+  margin: 0 0 var(--spacing-3) 0;
 }
 
 .selected-foods-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: var(--spacing-2);
 }
 
+/* Material Chip Style for Selected Foods */
 .selected-food-item {
-  background: #f0f0f0;
-  padding: 6px 12px;
-  border-radius: 16px;
-  font-size: 14px;
-  color: #333;
+  background: var(--color-primary-light);
+  color: var(--color-on-primary);
+  padding: var(--spacing-2) var(--spacing-3);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-label-large);
+  font-weight: var(--font-weight-medium);
+  transition: all var(--duration-short) var(--easing-standard);
 }
 
+.selected-food-item:hover {
+  background: var(--color-primary);
+  transform: scale(1.05);
+}
+
+/* Footer */
 .app-footer {
-  background: white;
-  padding: 20px;
+  background: var(--color-surface);
+  padding: var(--spacing-6) var(--spacing-5);
   text-align: center;
-  border-top: 1px solid #e0e0e0;
+  border-top: 1px solid var(--color-outline-variant);
 }
 
 .app-footer p {
-  margin: 4px 0;
-  font-size: 14px;
-  color: #666;
+  margin: var(--spacing-1) 0;
+  font-size: var(--font-size-body-small);
+  color: var(--color-on-surface-variant);
 }
 
 .footer-reference a {
-  color: #667eea;
+  color: var(--color-primary);
   text-decoration: none;
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
+  transition: all var(--duration-short) var(--easing-standard);
 }
 
 .footer-reference a:hover {
+  color: var(--color-primary-dark);
   text-decoration: underline;
 }
 
-/* レスポンシブ対応 */
-@media (max-width: 768px) {
+/* Responsive Design - Material Breakpoints */
+@media (max-width: 840px) {
   .app-main {
-    padding: 12px;
+    padding: var(--spacing-4);
+  }
+  
+  .food-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: var(--spacing-3);
+  }
+  
+  .app-title {
+    font-size: var(--font-size-headline-small);
+  }
+  
+  .app-foods {
+    padding: var(--spacing-4);
+  }
+}
+
+@media (max-width: 600px) {
+  .app-main {
+    padding: var(--spacing-3);
   }
   
   .food-grid {
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 12px;
-  }
-  
-  .app-title {
-    font-size: 24px;
+    gap: var(--spacing-2);
   }
   
   .app-counter-container {
     position: relative;
     top: 0;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .app-header {
+    padding: var(--spacing-3) var(--spacing-4);
+  }
+  
+  .app-title {
+    font-size: var(--font-size-title-large);
+  }
+  
+  .app-foods {
+    padding: var(--spacing-3);
+    border-radius: var(--radius-medium);
   }
 }

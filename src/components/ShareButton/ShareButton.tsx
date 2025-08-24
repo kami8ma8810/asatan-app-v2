@@ -24,7 +24,7 @@ export const ShareButton: Component<ShareButtonProps> = (props) => {
   const generateShareMessage = () => {
     const protein = totalProtein();
     const foods = props.selectedFoods.map(f => `・${f.name}`).join('\n');
-    const achievement = isTargetMet() ? '🎉 目標達成！' : '';
+    const achievement = isTargetMet() ? '【目標達成！】' : '';
     
     return `今日の朝たん計算 ${achievement}
 
@@ -88,7 +88,7 @@ https://asatan-app.vercel.app`;
     // 達成状態
     if (isTargetMet()) {
       ctx.font = 'bold 48px sans-serif';
-      ctx.fillText('🎉 目標達成！', canvas.width / 2, 180);
+      ctx.fillText('目標達成！', canvas.width / 2, 180);
     }
 
     // タンパク質量
@@ -135,7 +135,6 @@ https://asatan-app.vercel.app`;
         role="button"
         aria-label="シェア"
       >
-        <span class={styles.shareIcon}>📤</span>
         シェア
       </button>
 
@@ -166,7 +165,6 @@ https://asatan-app.vercel.app`;
                   role="button"
                   aria-label="Twitter"
                 >
-                  <span class={styles.icon}>𝕏</span>
                   X (Twitter)
                 </button>
 
@@ -176,7 +174,6 @@ https://asatan-app.vercel.app`;
                   role="button"
                   aria-label="LINE"
                 >
-                  <span class={styles.icon}>💬</span>
                   LINE
                 </button>
 
@@ -187,7 +184,6 @@ https://asatan-app.vercel.app`;
                     role="button"
                     aria-label="画像"
                   >
-                    <span class={styles.icon}>🖼️</span>
                     画像で保存
                   </button>
                 </Show>
@@ -199,7 +195,6 @@ https://asatan-app.vercel.app`;
                     role="button"
                     aria-label="その他"
                   >
-                    <span class={styles.icon}>📱</span>
                     その他のアプリ
                   </button>
                 </Show>

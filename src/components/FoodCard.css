@@ -1,34 +1,61 @@
+/* Material Design 3 Card Component */
 .food-card {
   display: flex;
   flex-direction: column;
-  border: 2px solid transparent;
-  border-radius: 12px;
+  border: none;
+  border-radius: var(--radius-medium);
   padding: 0;
-  background: white;
+  background: var(--color-surface);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--duration-medium) var(--easing-standard);
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-elevation-1);
   width: 100%;
   min-height: 240px;
+  position: relative;
 }
 
+/* Hover state with elevation change */
 .food-card:hover {
+  box-shadow: var(--shadow-elevation-3);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
+/* Selected state with morning glow */
 .food-card.selected {
-  border-color: #4CAF50;
+  box-shadow: 
+    var(--shadow-elevation-2),
+    0 0 0 2px var(--color-primary),
+    0 0 16px rgba(255, 149, 0, 0.2);
   transform: scale(1.02);
-  box-shadow: 0 4px 16px rgba(76, 175, 80, 0.3);
 }
 
+/* Ripple effect on click (Material Design) */
+.food-card::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 203, 5, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width var(--duration-long) var(--easing-standard),
+              height var(--duration-long) var(--easing-standard);
+}
+
+.food-card:active::after {
+  width: 300px;
+  height: 300px;
+}
+
+/* Image container */
 .food-card__image-container {
   position: relative;
   width: 100%;
   height: 160px;
-  background: #f5f5f5;
+  background: var(--color-surface-variant);
   overflow: hidden;
 }
 
@@ -37,66 +64,139 @@
   height: 100%;
   object-fit: cover;
   object-position: center;
+  transition: transform var(--duration-medium) var(--easing-standard);
 }
 
+.food-card:hover .food-card__image {
+  transform: scale(1.05);
+}
+
+/* Check mark with Material FAB style */
 .food-card__check {
   position: absolute;
-  top: 8px;
-  right: 8px;
-  animation: checkIn 0.3s ease;
-  background: white;
-  border-radius: 50%;
-  padding: 2px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  top: var(--spacing-2);
+  right: var(--spacing-2);
+  width: 40px;
+  height: 40px;
+  background: var(--color-success);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-elevation-3);
+  animation: checkIn var(--duration-medium) var(--easing-decelerate);
+}
+
+.food-card__check svg {
+  width: 24px;
+  height: 24px;
 }
 
 @keyframes checkIn {
   from {
-    transform: scale(0);
+    transform: scale(0) rotate(-180deg);
     opacity: 0;
   }
   to {
-    transform: scale(1);
+    transform: scale(1) rotate(0);
     opacity: 1;
   }
 }
 
+/* Card content area */
 .food-card__info {
-  padding: 12px;
+  padding: var(--spacing-3);
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--spacing-2);
+  background: var(--color-surface);
 }
 
+/* Food name with Material Typography */
 .food-card__name {
-  font-size: 14px;
-  font-weight: bold;
+  font-size: var(--font-size-title-small);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-on-surface);
   margin: 0;
-  color: #333;
-  line-height: 1.2;
+  line-height: var(--line-height-title);
 }
 
+/* Details container */
 .food-card__details {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  font-size: 12px;
-  color: #666;
+  gap: var(--spacing-1);
 }
 
+/* Protein amount - Pokemon-style emphasis */
 .food-card__protein {
-  font-size: 20px;
-  font-weight: bold;
-  color: #4CAF50;
+  font-size: var(--font-size-headline-small);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
+/* Serving size */
 .food-card__serving {
-  color: #666;
-  font-size: 12px;
+  font-size: var(--font-size-body-small);
+  color: var(--color-on-surface-variant);
+  font-weight: var(--font-weight-regular);
 }
 
+/* Weight */
 .food-card__weight {
-  color: #999;
-  font-size: 11px;
+  font-size: var(--font-size-label-small);
+  color: var(--color-outline);
+  font-weight: var(--font-weight-regular);
+}
+
+/* Focus state for accessibility */
+.food-card:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Disabled state */
+.food-card:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.food-card:disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .food-card {
+    min-height: 200px;
+  }
+  
+  .food-card__image-container {
+    height: 120px;
+  }
+  
+  .food-card__info {
+    padding: var(--spacing-2);
+  }
+  
+  .food-card__protein {
+    font-size: var(--font-size-title-large);
+  }
+  
+  .food-card__check {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .food-card__check svg {
+    width: 20px;
+    height: 20px;
+  }
 }

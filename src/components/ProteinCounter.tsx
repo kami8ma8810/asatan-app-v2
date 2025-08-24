@@ -21,7 +21,7 @@ export const ProteinCounter: Component<ProteinCounterProps> = (props) => {
           現在のタンパク質: <span class="counter-total">{props.total.toFixed(1)}g</span>
         </h2>
         <Show when={isAchieved()}>
-          <span class="protein-counter__achievement">🎉 目標達成！</span>
+          <span class="protein-counter__achievement">目標達成！</span>
         </Show>
         <Show when={!isAchieved() && remaining() > 0}>
           <span class="protein-counter__remaining">あと{remaining()}g</span>

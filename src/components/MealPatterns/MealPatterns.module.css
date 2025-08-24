@@ -1,97 +1,135 @@
+/* Material Design 3 Meal Patterns Component with Morning Theme */
 .container {
   width: 100%;
-  padding: 1rem;
+  padding: var(--spacing-4);
+  background: var(--color-background);
 }
 
 .container h2 {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-  color: #333;
+  font-size: var(--font-size-headline-medium);
+  font-weight: var(--font-weight-medium);
+  margin-bottom: var(--spacing-5);
+  color: var(--color-on-surface);
 }
 
+/* Filter Section - Material Chips */
 .filters {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
-  gap: 1rem;
+  margin-bottom: var(--spacing-6);
+  gap: var(--spacing-4);
   flex-wrap: wrap;
 }
 
 .categoryFilters {
   display: flex;
-  gap: 0.5rem;
+  gap: var(--spacing-2);
   flex-wrap: wrap;
 }
 
+/* Material Design Filter Chips */
 .categoryFilters button,
 .sortOptions button {
-  padding: 0.5rem 1rem;
-  border: 2px solid #e0e0e0;
-  background: white;
-  border-radius: 20px;
+  padding: var(--spacing-2) var(--spacing-3);
+  border: 1px solid var(--color-outline);
+  background: var(--color-surface);
+  border-radius: var(--radius-small);
   cursor: pointer;
-  transition: all 0.2s ease;
-  font-size: 0.9rem;
+  transition: all var(--duration-short) var(--easing-standard);
+  font-size: var(--font-size-label-large);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-on-surface-variant);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Ripple effect */
+.categoryFilters button::after,
+.sortOptions button::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: var(--color-primary);
+  opacity: 0.1;
+  transform: translate(-50%, -50%);
+  transition: width var(--duration-medium) var(--easing-standard),
+              height var(--duration-medium) var(--easing-standard);
+}
+
+.categoryFilters button:active::after,
+.sortOptions button:active::after {
+  width: 100px;
+  height: 100px;
 }
 
 .categoryFilters button:hover,
 .sortOptions button:hover {
-  background: #f5f5f5;
-  border-color: #ffcb05;
+  background: var(--color-surface-variant);
+  border-color: var(--color-primary);
 }
 
 .categoryFilters button.active,
 .sortOptions button.active {
-  background: #ffcb05;
-  color: white;
-  border-color: #ffcb05;
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-elevation-1);
 }
 
+/* Loading and Error States */
 .loading,
 .error {
   text-align: center;
-  padding: 2rem;
-  font-size: 1.1rem;
+  padding: var(--spacing-8);
+  font-size: var(--font-size-body-large);
 }
 
 .error {
-  color: #d32f2f;
+  color: var(--color-error);
 }
 
 .loading {
-  color: #666;
+  color: var(--color-on-surface-variant);
 }
 
+/* Patterns Grid */
 .patterns {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 1.5rem;
-  animation: fadeIn 0.3s ease-in;
+  gap: var(--spacing-4);
+  animation: fadeIn var(--duration-medium) var(--easing-decelerate);
 }
 
+/* Material Card for Pattern */
 .patternCard {
-  background: white;
-  border: 2px solid #e0e0e0;
-  border-radius: 12px;
-  padding: 1.25rem;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background: var(--color-surface);
+  border: none;
+  border-radius: var(--radius-medium);
+  padding: var(--spacing-5);
+  transition: all var(--duration-medium) var(--easing-standard);
+  box-shadow: var(--shadow-elevation-1);
+  position: relative;
+  overflow: hidden;
 }
 
 .patternCard:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  border-color: #ffcb05;
+  box-shadow: var(--shadow-elevation-3);
 }
 
+/* Card Header */
 .header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 0.75rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: var(--spacing-3);
+  padding-bottom: var(--spacing-3);
+  border-bottom: 1px solid var(--color-outline-variant);
 }
 
 .info {
@@ -99,55 +137,59 @@
 }
 
 .name {
-  margin: 0 0 0.5rem 0;
-  font-size: 1.15rem;
-  font-weight: bold;
-  color: #333;
+  margin: 0 0 var(--spacing-2) 0;
+  font-size: var(--font-size-title-medium);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-on-surface);
 }
 
+/* Category Badge - Material Chip Style */
 .categoryBadge {
   display: inline-block;
-  padding: 0.25rem 0.75rem;
-  background: #f0f0f0;
-  border-radius: 12px;
-  font-size: 0.8rem;
-  color: #666;
-  font-weight: 500;
+  padding: var(--spacing-1) var(--spacing-2);
+  background: var(--color-surface-variant);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-label-small);
+  color: var(--color-on-surface-variant);
+  font-weight: var(--font-weight-medium);
 }
 
 .description {
-  margin: 0 0 1rem 0;
-  font-size: 0.9rem;
-  color: #666;
-  line-height: 1.4;
+  margin: 0 0 var(--spacing-4) 0;
+  font-size: var(--font-size-body-medium);
+  color: var(--color-on-surface-variant);
+  line-height: var(--line-height-body);
 }
 
+/* Protein Display - Morning Theme Emphasis */
 .protein {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0.5rem;
-  background: linear-gradient(135deg, #2c5aa0 0%, #3b69b3 100%);
-  border-radius: 8px;
+  padding: var(--spacing-2);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
+  border-radius: var(--radius-small);
   min-width: 70px;
-  color: white;
+  color: var(--color-on-primary);
+  box-shadow: var(--shadow-elevation-1);
 }
 
 .proteinValue {
-  font-size: 1.3rem;
-  font-weight: bold;
+  font-size: var(--font-size-headline-small);
+  font-weight: var(--font-weight-bold);
 }
 
 .proteinLabel {
-  font-size: 0.65rem;
-  margin-top: 0.1rem;
+  font-size: var(--font-size-label-small);
+  margin-top: var(--spacing-1);
   opacity: 0.9;
 }
 
+/* Stats Section */
 .stats {
   display: flex;
-  gap: 1rem;
-  margin-bottom: 1rem;
+  gap: var(--spacing-4);
+  margin-bottom: var(--spacing-4);
 }
 
 .stat {
@@ -156,33 +198,37 @@
 }
 
 .statLabel {
-  font-size: 0.75rem;
-  color: #999;
-  margin-bottom: 0.25rem;
+  font-size: var(--font-size-label-small);
+  color: var(--color-outline);
+  margin-bottom: var(--spacing-1);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .statValue {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #333;
+  font-size: var(--font-size-body-large);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-on-surface);
 }
 
+/* Foods List */
 .foods {
-  margin-bottom: 1rem;
+  margin-bottom: var(--spacing-4);
 }
 
 .foods h4 {
-  margin: 0 0 0.5rem 0;
-  font-size: 0.9rem;
-  color: #666;
+  margin: 0 0 var(--spacing-2) 0;
+  font-size: var(--font-size-label-large);
+  color: var(--color-on-surface-variant);
+  font-weight: var(--font-weight-medium);
 }
 
 .foodItem {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.375rem 0;
-  border-bottom: 1px solid #f0f0f0;
+  padding: var(--spacing-2) 0;
+  border-bottom: 1px solid var(--color-outline-variant);
 }
 
 .foodItem:last-child {
@@ -190,43 +236,77 @@
 }
 
 .foodName {
-  color: #333;
-  font-size: 0.9rem;
+  color: var(--color-on-surface);
+  font-size: var(--font-size-body-medium);
 }
 
 .foodProtein {
-  color: #2c5aa0;
-  font-size: 0.85rem;
-  font-weight: 600;
+  color: var(--color-primary);
+  font-size: var(--font-size-body-small);
+  font-weight: var(--font-weight-semibold);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
+/* Select Button - Material FAB Style */
 .selectButton {
   width: 100%;
-  padding: 0.75rem;
-  background: linear-gradient(135deg, #ffcb05 0%, #ffd633 100%);
-  color: white;
+  padding: var(--spacing-3);
+  background: var(--color-primary);
+  color: var(--color-on-primary);
   border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: bold;
+  border-radius: var(--radius-medium);
+  font-size: var(--font-size-label-large);
+  font-weight: var(--font-weight-medium);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--duration-short) var(--easing-standard);
+  box-shadow: var(--shadow-elevation-2);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Ripple effect for button */
+.selectButton::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width var(--duration-long) var(--easing-standard),
+              height var(--duration-long) var(--easing-standard);
+}
+
+.selectButton:active::after {
+  width: 300px;
+  height: 300px;
 }
 
 .selectButton:hover {
-  background: linear-gradient(135deg, #ffd633 0%, #ffe066 100%);
+  background: var(--color-primary-dark);
   transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(255, 203, 5, 0.3);
+  box-shadow: var(--shadow-elevation-3);
 }
 
 .selectButton:active {
   transform: translateY(0);
 }
 
+.selectButton:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Animations */
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(16px);
   }
   to {
     opacity: 1;
@@ -234,7 +314,8 @@
   }
 }
 
-@media (max-width: 768px) {
+/* Responsive Design - Material Breakpoints */
+@media (max-width: 840px) {
   .patterns {
     grid-template-columns: 1fr;
   }
@@ -242,6 +323,7 @@
   .filters {
     flex-direction: column;
     align-items: stretch;
+    gap: var(--spacing-3);
   }
   
   .categoryFilters {
@@ -251,5 +333,28 @@
   .sortOptions {
     display: flex;
     justify-content: center;
+    gap: var(--spacing-2);
+  }
+}
+
+@media (max-width: 600px) {
+  .container {
+    padding: var(--spacing-3);
+  }
+  
+  .patternCard {
+    padding: var(--spacing-4);
+  }
+  
+  .name {
+    font-size: var(--font-size-title-small);
+  }
+  
+  .protein {
+    min-width: 60px;
+  }
+  
+  .proteinValue {
+    font-size: var(--font-size-title-large);
   }
 }
