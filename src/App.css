@@ -39,29 +39,33 @@
   margin: var(--spacing-1) 0 0 0;
 }
 
+/* Layout Container */
+.app-layout {
+  display: flex;
+  gap: var(--spacing-5);
+  padding: var(--spacing-5);
+  max-width: 1600px;
+  margin: 0 auto;
+  min-height: calc(100vh - 200px);
+}
+
 /* Main Content Area */
 .app-main {
   flex: 1;
-  padding: var(--spacing-5);
-  max-width: 1280px;
   width: 100%;
-  margin: 0 auto;
+  max-width: 1200px;
 }
 
-/* Counter Container with Material Elevation */
-.app-counter-container {
-  position: sticky;
-  top: calc(64px + var(--spacing-4));
-  z-index: var(--z-index-sticky);
-  margin-bottom: var(--spacing-6);
+/* Actions Bar */
+.app-actions {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: var(--spacing-4);
-}
-
-.app-share-button {
-  flex-shrink: 0;
+  justify-content: flex-end;
+  margin-bottom: var(--spacing-5);
+  position: sticky;
+  top: var(--spacing-4);
+  z-index: var(--z-index-sticky);
+  background: var(--color-background);
+  padding: var(--spacing-3) 0;
 }
 
 /* Foods Container - Material Surface */
@@ -109,43 +113,6 @@
   margin-bottom: var(--spacing-4);
 }
 
-/* Selected Foods Chip Container */
-.selected-foods {
-  background: var(--color-surface);
-  border-radius: var(--radius-large);
-  padding: var(--spacing-5);
-  margin-bottom: var(--spacing-6);
-  box-shadow: var(--shadow-elevation-1);
-}
-
-.selected-foods-title {
-  font-size: var(--font-size-title-medium);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-on-surface);
-  margin: 0 0 var(--spacing-3) 0;
-}
-
-.selected-foods-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--spacing-2);
-}
-
-/* Material Chip Style for Selected Foods */
-.selected-food-item {
-  background: var(--color-primary-light);
-  color: var(--color-on-primary);
-  padding: var(--spacing-2) var(--spacing-3);
-  border-radius: var(--radius-full);
-  font-size: var(--font-size-label-large);
-  font-weight: var(--font-weight-medium);
-  transition: all var(--duration-short) var(--easing-standard);
-}
-
-.selected-food-item:hover {
-  background: var(--color-primary);
-  transform: scale(1.05);
-}
 
 /* Footer */
 .app-footer {
@@ -174,8 +141,15 @@
 }
 
 /* Responsive Design - Material Breakpoints */
+@media (max-width: 1024px) {
+  .app-layout {
+    gap: var(--spacing-4);
+    padding: var(--spacing-4);
+  }
+}
+
 @media (max-width: 840px) {
-  .app-main {
+  .app-layout {
     padding: var(--spacing-4);
   }
   
@@ -193,21 +167,34 @@
   }
 }
 
-@media (max-width: 600px) {
-  .app-main {
+@media (max-width: 768px) {
+  /* モバイルレイアウト */
+  .app-layout {
+    flex-direction: column;
     padding: var(--spacing-3);
+    padding-bottom: 80px; /* ボトムシート用のスペース */
+  }
+  
+  .app-main {
+    max-width: none;
+  }
+  
+  .app-actions {
+    position: static;
+    justify-content: center;
+    margin-bottom: var(--spacing-4);
+  }
+}
+
+@media (max-width: 600px) {
+  .app-layout {
+    padding: var(--spacing-2);
+    padding-bottom: 80px;
   }
   
   .food-grid {
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
     gap: var(--spacing-2);
-  }
-  
-  .app-counter-container {
-    position: relative;
-    top: 0;
-    flex-direction: column;
-    align-items: stretch;
   }
   
   .app-header {

@@ -45,8 +45,8 @@
   --color-surface-5: #FBFBFB;
   
   /* Typography - Material Design type scale */
-  --font-family-base: 'Noto Sans JP', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
-  --font-family-display: 'Noto Sans JP', 'Roboto', sans-serif;
+  --font-family-sans: 'Noto Sans JP', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  --font-family-mono: 'Roboto Mono', 'Courier New', monospace;
   
   /* Display */
   --font-size-display-large: 57px;
@@ -135,6 +135,10 @@
   --z-index-modal: 1050;
   --z-index-popover: 1060;
   --z-index-tooltip: 1070;
+  
+  /* Error color */
+  --color-error: #BA1A1A;
+  --color-on-error: #FFFFFF;
 }
 
 /* Dark mode support (optional) */

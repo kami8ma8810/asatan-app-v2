@@ -1,7 +1,7 @@
-import { type Component, createSignal, For, Show } from "solid-js";
+import { type Component, createSignal, For, Show, createEffect } from "solid-js";
 import { FoodCard } from "./components/FoodCard";
-import { ProteinCounter } from "./components/ProteinCounter";
 import { ShareButton } from "./components/ShareButton";
+import { SelectionSidebar } from "./components/SelectionSidebar/SelectionSidebar";
 import { foodsData, foodCategories, getFoodsByCategory } from "./data/foods";
 import { ProteinCalculator } from "./services/ProteinCalculator";
 import type { Food } from "./models/Food";
@@ -9,13 +9,26 @@ import "./App.css";
 
 const App: Component = () => {
   const [selectedFoods, setSelectedFoods] = createSignal<Set<string>>(new Set());
+  const [isMobileExpanded, setIsMobileExpanded] = createSignal(false);
+  const [isMobile, setIsMobile] = createSignal(false);
   const calculator = new ProteinCalculator();
 
+  // レスポンシブ判定
+  createEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  });
+
+  const getSelectedFoodsList = () => {
+    return foodsData.filter(food => selectedFoods().has(food.id));
+  };
+
   const totalProtein = () => {
-    const selected = foodsData.filter(food => 
-      selectedFoods().has(food.id)
-    );
-    return calculator.calculate(selected);
+    return calculator.calculate(getSelectedFoodsList());
   };
 
   const handleToggle = (food: Food) => {
@@ -28,6 +41,12 @@ const App: Component = () => {
     setSelectedFoods(newSelected);
   };
 
+  const handleRemoveFood = (food: Food) => {
+    const newSelected = new Set(selectedFoods());
+    newSelected.delete(food.id);
+    setSelectedFoods(newSelected);
+  };
+
   return (
     <div class="app">
       <header class="app-header">
@@ -35,55 +54,51 @@ const App: Component = () => {
         <p class="app-subtitle">朝食のタンパク質20gを目指そう！</p>
       </header>
 
-      <main class="app-main">
-        <div class="app-counter-container">
-          <ProteinCounter total={totalProtein()} />
-          <div class="app-share-button">
+      <div class="app-layout">
+        {/* デスクトップ用サイドバー / モバイル用ボトムシート */}
+        <SelectionSidebar
+          selectedFoods={getSelectedFoodsList()}
+          totalProtein={totalProtein()}
+          targetProtein={20}
+          onRemoveFood={handleRemoveFood}
+          isMobile={isMobile()}
+          isExpanded={isMobileExpanded()}
+          onToggleExpand={() => setIsMobileExpanded(!isMobileExpanded())}
+        />
+
+        <main class="app-main">
+          {/* シェアボタンを上部に配置 */}
+          <div class="app-actions">
             <ShareButton 
-              selectedFoods={foodsData.filter(food => selectedFoods().has(food.id))}
+              selectedFoods={getSelectedFoodsList()}
               targetProtein={20}
               generateImage={true}
               useWebShareApi={true}
             />
           </div>
-        </div>
 
-        <div class="app-foods">
-          <For each={foodCategories}>
-            {(category) => (
-              <section class="food-category">
-                <h2 class="category-title">{category}</h2>
-                <div class="food-grid">
-                  <For each={getFoodsByCategory(category)}>
-                    {(food) => (
-                      <FoodCard
-                        food={food}
-                        selected={selectedFoods().has(food.id)}
-                        onToggle={handleToggle}
-                      />
-                    )}
-                  </For>
-                </div>
-              </section>
-            )}
-          </For>
-        </div>
-
-        <Show when={selectedFoods().size > 0}>
-          <div class="selected-foods">
-            <h3 class="selected-foods-title">選択中の食品</h3>
-            <div class="selected-foods-list">
-              <For each={foodsData.filter(f => selectedFoods().has(f.id))}>
-                {(food) => (
-                  <span class="selected-food-item">
-                    {food.name} ({food.protein}g)
-                  </span>
-                )}
-              </For>
-            </div>
+          <div class="app-foods">
+            <For each={foodCategories}>
+              {(category) => (
+                <section class="food-category">
+                  <h2 class="category-title">{category}</h2>
+                  <div class="food-grid">
+                    <For each={getFoodsByCategory(category)}>
+                      {(food) => (
+                        <FoodCard
+                          food={food}
+                          selected={selectedFoods().has(food.id)}
+                          onToggle={handleToggle}
+                        />
+                      )}
+                    </For>
+                  </div>
+                </section>
+              )}
+            </For>
           </div>
-        </Show>
-      </main>
+        </main>
+      </div>
 
       <footer class="app-footer">
         <p>© 2024 朝たん計算アプリ v2.0 - Powered by Solid.js</p>
