@@ -6,11 +6,11 @@
   --color-base: #F8F9FA;
   --color-base-variant: #FFFFFF;
   
-  /* Main (30%) - Warm morning sun */
-  --color-primary: #FF9500; /* Warm orange - morning sun */
-  --color-primary-accessible: #D97700; /* コントラスト比3:1以上 */
-  --color-primary-light: #FFB143;
-  --color-primary-dark: #E68600;
+  /* Main (30%) - Vibrant red theme */
+  --color-primary: #FF4B4B; /* Vibrant red - energetic morning */
+  --color-primary-accessible: #C62828; /* コントラスト比4.5:1以上 */
+  --color-primary-light: #FF6B6B;
+  --color-primary-dark: #D32F2F;
   --color-on-primary: #FFFFFF;
   
   /* Accent (10%) - Fresh morning accent */
@@ -19,14 +19,14 @@
   --color-secondary-dark: #00A39A;
   --color-on-secondary: #FFFFFF;
   
-  --color-tertiary: #FFE5B4; /* Soft peach - dawn light */
-  --color-tertiary-light: #FFF0D9;
-  --color-tertiary-dark: #FFDA8F;
+  --color-tertiary: #FFE0E0; /* Soft pink - complementing red theme */
+  --color-tertiary-light: #FFF5F5;
+  --color-tertiary-dark: #FFB8B8;
   --color-on-tertiary: #000000;
   
-  --color-success: #4CAF50;
-  --color-success-light: #6BC76F;
-  --color-success-dark: #388E3C;
+  --color-success: #2E7D32; /* アクセシブルな緑 - コントラスト比4.5:1以上 */
+  --color-success-light: #4CAF50;
+  --color-success-dark: #1B5E20;
   --color-on-success: #FFFFFF;
   
   --color-surface: #FFFFFF;

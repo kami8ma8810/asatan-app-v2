@@ -31,7 +31,7 @@
 .app-title {
   font-size: var(--font-size-headline-medium);
   font-weight: var(--font-weight-bold);
-  color: var(--color-primary);
+  color: var(--color-primary-accessible);
   margin: 0;
   display: flex;
   align-items: center;
@@ -132,7 +132,7 @@
 }
 
 .footer-reference a {
-  color: var(--color-primary);
+  color: var(--color-primary-accessible);
   text-decoration: none;
   font-weight: var(--font-weight-medium);
   transition: all var(--duration-short) var(--easing-standard);
