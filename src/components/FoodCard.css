@@ -1,7 +1,7 @@
 .food-card {
   display: flex;
   flex-direction: column;
-  border: 3px solid transparent;
+  border: 2px solid transparent;
   border-radius: 12px;
   padding: 0;
   background: white;
@@ -10,7 +10,7 @@
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   width: 100%;
-  aspect-ratio: 1;
+  min-height: 240px;
 }
 
 .food-card:hover {
@@ -20,14 +20,14 @@
 
 .food-card.selected {
   border-color: #4CAF50;
-  transform: scale(1.05);
-  box-shadow: 0 4px 16px rgba(76, 175, 80, 0.4);
+  transform: scale(1.02);
+  box-shadow: 0 4px 16px rgba(76, 175, 80, 0.3);
 }
 
 .food-card__image-container {
   position: relative;
   width: 100%;
-  height: 100%;
+  height: 160px;
   background: #f5f5f5;
   overflow: hidden;
 }
@@ -35,14 +35,14 @@
 .food-card__image {
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  background: white;
+  object-fit: cover;
+  object-position: center;
 }
 
 .food-card__check {
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: 8px;
+  right: 8px;
   animation: checkIn 0.3s ease;
   background: white;
   border-radius: 50%;
@@ -61,4 +61,42 @@
   }
 }
 
-/* 画像内に情報が含まれているため、追加のテキスト表示は不要 */
+.food-card__info {
+  padding: 12px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.food-card__name {
+  font-size: 14px;
+  font-weight: bold;
+  margin: 0;
+  color: #333;
+  line-height: 1.2;
+}
+
+.food-card__details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  color: #666;
+}
+
+.food-card__protein {
+  font-size: 20px;
+  font-weight: bold;
+  color: #4CAF50;
+}
+
+.food-card__serving {
+  color: #666;
+  font-size: 12px;
+}
+
+.food-card__weight {
+  color: #999;
+  font-size: 11px;
+}

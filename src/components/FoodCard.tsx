@@ -50,6 +50,18 @@ export const FoodCard: Component<FoodCardProps> = (props) => {
           </div>
         </Show>
       </div>
+      <div class="food-card__info">
+        <h3 class="food-card__name">{props.food.name}</h3>
+        <div class="food-card__details">
+          <span class="food-card__protein">{props.food.protein}g</span>
+          <Show when={props.food.serving}>
+            <span class="food-card__serving">{props.food.serving}</span>
+          </Show>
+          <Show when={props.food.weight}>
+            <span class="food-card__weight">{props.food.weight}</span>
+          </Show>
+        </div>
+      </div>
     </button>
   );
 };
