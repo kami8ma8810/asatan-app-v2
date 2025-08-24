@@ -308,8 +308,7 @@
 }
 
 .selectedItem:hover {
-  background: var(--color-outline-variant);
-  transform: translateX(4px);
+  /* ホバー効果を削除 */
 }
 
 .itemInfo {
