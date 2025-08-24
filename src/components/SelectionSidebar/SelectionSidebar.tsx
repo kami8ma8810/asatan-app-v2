@@ -58,7 +58,7 @@ export const SelectionSidebar: Component<SelectionSidebarProps> = (props) => {
       <div class={styles.content}>
         {/* タンパク質カウンター */}
         <div class={`${styles.proteinSection} ${isAchieved() ? styles.achieved : ''}`}>
-          <h3 class={styles.sectionTitle}>現在のタンパク質</h3>
+          <h2 class={styles.sectionTitle}>現在のタンパク質</h2>
           
           <div class={styles.proteinDisplay}>
             <div class={styles.proteinValue}>
@@ -93,9 +93,9 @@ export const SelectionSidebar: Component<SelectionSidebarProps> = (props) => {
 
         {/* 選択中の食品 */}
         <div class={styles.selectedSection}>
-          <h3 class={styles.sectionTitle}>
+          <h2 class={styles.sectionTitle}>
             選択中の食品 ({props.selectedFoods.length})
-          </h3>
+          </h2>
           
           <Show when={props.selectedFoods.length === 0}>
             <p class={styles.emptyMessage}>
