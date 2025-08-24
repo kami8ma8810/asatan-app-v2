@@ -32,10 +32,10 @@
   --color-surface-variant: #F8F9FA;
   --color-background: #F8F9FA; /* Base color - 60% */
   --color-on-surface: #1C1B1F;
-  --color-on-surface-variant: #49454E;
+  --color-on-surface-variant: #5F5C64;
   
-  --color-outline: #79747E;
-  --color-outline-variant: #CAC4CF;
+  --color-outline: #6B6770;
+  --color-outline-variant: #B8B2BD;
   
   /* Elevation colors */
   --color-surface-1: #FFFFFF;

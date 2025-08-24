@@ -100,6 +100,45 @@
   transform: rotate(180deg);
 }
 
+/* 達成時のモバイルスタイル */
+.sidebar.mobile.mobileAchieved {
+  background: linear-gradient(135deg, 
+    var(--color-success-light) 0%, 
+    var(--color-success) 100%);
+}
+
+.mobileHandle.achieved {
+  background: transparent;
+}
+
+.mobileHandle.achieved .handleProtein {
+  color: var(--color-on-success);
+  font-weight: var(--font-weight-bold);
+}
+
+.achievedIcon {
+  width: 32px;
+  height: 32px;
+  background: var(--color-on-success);
+  color: var(--color-success);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: checkIn var(--duration-medium) var(--easing-decelerate);
+}
+
+@keyframes checkIn {
+  from {
+    transform: scale(0) rotate(-180deg);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1) rotate(0);
+    opacity: 1;
+  }
+}
+
 /* Content Container */
 .content {
   display: flex;
@@ -278,7 +317,8 @@
   justify-content: space-between;
   align-items: center;
   flex: 1;
-  gap: var(--spacing-2);
+  gap: var(--spacing-3);
+  margin-right: var(--spacing-2);
 }
 
 .itemName {
@@ -290,11 +330,7 @@
 .itemProtein {
   font-size: var(--font-size-body-small);
   font-weight: var(--font-weight-semibold);
-  color: var(--color-primary);
-  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--color-on-surface);
 }
 
 /* Remove Button */
@@ -309,9 +345,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: var(--font-size-body-large);
+  font-size: 16px;
+  line-height: 1;
+  padding: 0;
   transition: all var(--duration-short) var(--easing-standard);
-  opacity: 0.8;
+  opacity: 0.9;
 }
 
 .removeButton:hover {

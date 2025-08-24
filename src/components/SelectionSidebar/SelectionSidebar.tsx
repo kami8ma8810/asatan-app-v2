@@ -20,20 +20,32 @@ export const SelectionSidebar: Component<SelectionSidebarProps> = (props) => {
     Math.min(150, Math.round((props.totalProtein / (props.targetProtein || 20)) * 100));
 
   return (
-    <div class={`${styles.sidebar} ${props.isMobile ? styles.mobile : ''} ${props.isExpanded ? styles.expanded : ''}`}>
+    <div class={`${styles.sidebar} ${props.isMobile ? styles.mobile : ''} ${props.isExpanded ? styles.expanded : ''} ${isAchieved() ? styles.mobileAchieved : ''}`}>
       {/* モバイル用フローティングカウンター */}
       <Show when={props.isMobile}>
         <button 
-          class={styles.mobileHandle}
+          class={`${styles.mobileHandle} ${isAchieved() ? styles.achieved : ''}`}
           onClick={props.onToggleExpand}
           aria-label="選択中の食品を表示"
         >
           <div class={styles.handleSummary}>
-            <div class={styles.handleProtein}>
-              {props.totalProtein.toFixed(1)}
-              <span style="font-size: 0.75em; font-weight: normal;">g</span>
-            </div>
-            <span class={styles.handleCount}>選択中: {props.selectedFoods.length}品</span>
+            <Show when={!isAchieved()}>
+              <div class={styles.handleProtein}>
+                {props.totalProtein.toFixed(1)}
+                <span style="font-size: 0.75em; font-weight: normal;">g</span>
+              </div>
+              <span class={styles.handleCount}>あと{remaining()}g</span>
+            </Show>
+            <Show when={isAchieved()}>
+              <div class={styles.achievedIcon}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                </svg>
+              </div>
+              <div class={styles.handleProtein}>
+                {props.totalProtein.toFixed(1)}g 達成！
+              </div>
+            </Show>
           </div>
           <div class={`${styles.handleToggle} ${props.isExpanded ? styles.expanded : ''}`}>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
