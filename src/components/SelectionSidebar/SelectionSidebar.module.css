@@ -341,14 +341,15 @@
   background: var(--color-error);
   color: var(--color-on-error);
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  line-height: 1;
+  display: grid;
+  place-items: center;
   padding: 0;
   transition: all var(--duration-short) var(--easing-standard);
   opacity: 0.9;
+}
+
+.removeButton svg {
+  display: block;
 }
 
 .removeButton:hover {
