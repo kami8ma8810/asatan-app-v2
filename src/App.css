@@ -17,6 +17,13 @@
   transition: box-shadow var(--duration-short) var(--easing-standard);
 }
 
+/* モバイルではヘッダー固定しない */
+@media (max-width: 768px) {
+  .app-header {
+    position: relative;
+  }
+}
+
 .app-header:hover {
   box-shadow: var(--shadow-elevation-3);
 }

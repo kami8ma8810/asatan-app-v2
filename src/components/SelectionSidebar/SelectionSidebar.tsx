@@ -21,17 +21,24 @@ export const SelectionSidebar: Component<SelectionSidebarProps> = (props) => {
 
   return (
     <div class={`${styles.sidebar} ${props.isMobile ? styles.mobile : ''} ${props.isExpanded ? styles.expanded : ''}`}>
-      {/* モバイル用ハンドル */}
+      {/* モバイル用フローティングカウンター */}
       <Show when={props.isMobile}>
         <button 
           class={styles.mobileHandle}
           onClick={props.onToggleExpand}
           aria-label="選択中の食品を表示"
         >
-          <div class={styles.handleBar} />
           <div class={styles.handleSummary}>
-            <span class={styles.handleProtein}>{props.totalProtein.toFixed(1)}g</span>
-            <span class={styles.handleCount}>({props.selectedFoods.length}品)</span>
+            <div class={styles.handleProtein}>
+              {props.totalProtein.toFixed(1)}
+              <span style="font-size: 0.75em; font-weight: normal;">g</span>
+            </div>
+            <span class={styles.handleCount}>選択中: {props.selectedFoods.length}品</span>
+          </div>
+          <div class={`${styles.handleToggle} ${props.isExpanded ? styles.expanded : ''}`}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M7 10l5 5 5-5z"/>
+            </svg>
           </div>
         </button>
       </Show>
