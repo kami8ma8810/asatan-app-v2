@@ -9,7 +9,7 @@
   cursor: pointer;
   transition: all var(--duration-medium) var(--easing-standard);
   overflow: hidden;
-  box-shadow: var(--shadow-elevation-1);
+  box-shadow: var(--shadow-elevation-2);
   width: 100%;
   min-height: 240px;
   position: relative;
@@ -24,10 +24,9 @@
 /* Selected state with morning glow */
 .food-card.selected {
   box-shadow: 
-    var(--shadow-elevation-2),
+    var(--shadow-elevation-3),
     0 0 0 2px var(--color-primary),
     0 0 16px rgba(255, 149, 0, 0.2);
-  transform: scale(1.02);
 }
 
 /* Ripple effect removed for cleaner interaction */
