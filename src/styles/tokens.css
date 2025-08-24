@@ -33,6 +33,8 @@
   --color-background: #F8F9FA; /* Base color - 60% */
   --color-on-surface: #1C1B1F;
   --color-on-surface-variant: #5F5C64;
+  --color-on-surface-medium: #595959; /* コントラスト比4.5:1以上 */
+  --color-on-surface-light: #707070; /* コントラスト比3:1以上 */
   
   --color-outline: #6B6770;
   --color-outline-variant: #B8B2BD;
