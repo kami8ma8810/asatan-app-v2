@@ -114,11 +114,7 @@
 .food-card__protein {
   font-size: var(--font-size-headline-small);
   font-weight: var(--font-weight-bold);
-  color: var(--color-primary);
-  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--color-primary-accessible);
 }
 
 /* Serving size */

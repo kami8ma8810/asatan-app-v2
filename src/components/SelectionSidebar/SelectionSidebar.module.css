@@ -72,7 +72,7 @@
 
 .handleProtein {
   font-weight: var(--font-weight-bold);
-  color: var(--color-primary);
+  color: var(--color-primary-accessible);
   font-size: var(--font-size-headline-medium);
   display: flex;
   align-items: baseline;
@@ -191,7 +191,7 @@
 .proteinValue {
   font-size: var(--font-size-display-small);
   font-weight: var(--font-weight-bold);
-  color: var(--color-primary);
+  color: var(--color-primary-accessible);
   line-height: 1;
   display: flex;
   align-items: baseline;

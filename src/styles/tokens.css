@@ -8,6 +8,7 @@
   
   /* Main (30%) - Warm morning sun */
   --color-primary: #FF9500; /* Warm orange - morning sun */
+  --color-primary-accessible: #D97700; /* コントラスト比3:1以上 */
   --color-primary-light: #FFB143;
   --color-primary-dark: #E68600;
   --color-on-primary: #FFFFFF;
