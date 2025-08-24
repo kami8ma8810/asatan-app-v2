@@ -13,12 +13,24 @@ export const foodsData: Food[] = foodImageDataList.map(data =>
   )
 );
 
+
 // デフォルトのエクスポート
 export const foods = foodsData;
 
 // カテゴリー別に食品を取得するヘルパー関数
 export const getFoodsByCategory = (category: FoodCategory): Food[] => {
-  return foodsData.filter(food => food.category === category);
+  // 日本語カテゴリー名から英語カテゴリーコードに逆変換
+  const reverseMapping: Record<string, string> = {
+    '豆類・大豆製品': 'soy',
+    '乳製品': 'dairy',
+    '魚介類': 'fish',
+    '穀物・パン類': 'grain',
+    '肉類・加工品': 'meat',
+    '卵類': 'egg',
+  };
+  
+  const categoryCode = reverseMapping[category];
+  return foodsData.filter(food => food.category === categoryCode);
 };
 
 export type FoodCategory = 
