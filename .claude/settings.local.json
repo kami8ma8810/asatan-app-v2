@@ -32,7 +32,8 @@
       "Bash(grep:*)",
       "Bash(bunx playwright:*)",
       "Bash(open http://localhost:5173/)",
-      "Bash(npx playwright test:*)"
+      "Bash(npx playwright test:*)",
+      "Bash(node:*)"
     ],
     "deny": [],
     "ask": []

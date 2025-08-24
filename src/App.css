@@ -44,8 +44,8 @@
   display: flex;
   gap: var(--spacing-5);
   padding: var(--spacing-5);
-  max-width: 1920px;
-  margin: 0 auto;
+  width: 100%;
+  max-width: 100%;
   min-height: calc(100vh - 200px);
 }
 
