@@ -1,5 +1,6 @@
 import { type Component, Show, For } from 'solid-js';
 import type { Food } from '../../models/Food';
+import { ShareButton } from '../ShareButton';
 import styles from './SelectionSidebar.module.css';
 
 interface SelectionSidebarProps {
@@ -117,6 +118,18 @@ export const SelectionSidebar: Component<SelectionSidebarProps> = (props) => {
             </div>
           </Show>
         </div>
+
+        {/* シェアボタン（デスクトップのみ） */}
+        <Show when={!props.isMobile}>
+          <div class={styles.shareSection}>
+            <ShareButton 
+              selectedFoods={props.selectedFoods}
+              targetProtein={props.targetProtein || 20}
+              generateImage={true}
+              useWebShareApi={true}
+            />
+          </div>
+        </Show>
       </div>
     </div>
   );

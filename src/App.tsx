@@ -1,7 +1,7 @@
 import { type Component, createSignal, For, Show, createEffect } from "solid-js";
 import { FoodCard } from "./components/FoodCard";
 import { ShareButton } from "./components/ShareButton";
-import { SelectionSidebar } from "./components/SelectionSidebar/SelectionSidebar";
+import { SelectionSidebar } from "./components/SelectionSidebar";
 import { foodsData, foodCategories, getFoodsByCategory } from "./data/foods";
 import { ProteinCalculator } from "./services/ProteinCalculator";
 import type { Food } from "./models/Food";
@@ -67,15 +67,17 @@ const App: Component = () => {
         />
 
         <main class="app-main">
-          {/* シェアボタンを上部に配置 */}
-          <div class="app-actions">
-            <ShareButton 
-              selectedFoods={getSelectedFoodsList()}
-              targetProtein={20}
-              generateImage={true}
-              useWebShareApi={true}
-            />
-          </div>
+          {/* モバイルのみシェアボタンを上部に配置 */}
+          <Show when={isMobile()}>
+            <div class="app-actions">
+              <ShareButton 
+                selectedFoods={getSelectedFoodsList()}
+                targetProtein={20}
+                generateImage={true}
+                useWebShareApi={true}
+              />
+            </div>
+          </Show>
 
           <div class="app-foods">
             <For each={foodCategories}>
