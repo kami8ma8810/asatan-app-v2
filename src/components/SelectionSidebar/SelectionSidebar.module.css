@@ -80,8 +80,9 @@
 }
 
 .handleCount {
-  color: var(--color-on-surface-variant);
+  color: var(--color-on-surface);
   font-size: var(--font-size-body-medium);
+  opacity: 0.87;
 }
 
 .handleToggle {
@@ -205,7 +206,8 @@
 
 .remaining {
   font-size: var(--font-size-body-large);
-  color: var(--color-on-surface-variant);
+  color: var(--color-on-surface);
+  opacity: 0.87;
 }
 
 .achievedBadge {

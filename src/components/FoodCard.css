@@ -124,15 +124,17 @@
 /* Serving size */
 .food-card__serving {
   font-size: var(--font-size-body-small);
-  color: var(--color-on-surface-variant);
+  color: var(--color-on-surface);
   font-weight: var(--font-weight-regular);
+  opacity: 0.8;
 }
 
 /* Weight */
 .food-card__weight {
   font-size: var(--font-size-label-small);
-  color: var(--color-outline);
+  color: var(--color-on-surface);
   font-weight: var(--font-weight-regular);
+  opacity: 0.7;
 }
 
 /* Focus state for accessibility */
