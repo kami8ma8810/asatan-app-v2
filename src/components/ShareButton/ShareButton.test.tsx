@@ -1,85 +1,104 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen, fireEvent } from '@solidjs/testing-library';
-import '@testing-library/jest-dom';
+import { render, cleanup, fireEvent, waitFor } from '@solidjs/testing-library';
 import { ShareButton } from './ShareButton';
 import type { Food } from '../../models/Food';
 
 describe('ShareButton', () => {
   const mockFoods: Food[] = [
-    { id: 'chicken_salad_1', name: 'サラダチキン', protein: 21.7, unit: '1個', category: 'meat', imageUrl: '/images/chicken.png' },
-    { id: 'egg_1', name: '卵（1個）', protein: 6.2, unit: '1個', category: 'egg', imageUrl: '/images/egg.png' },
-    { id: 'natto_1', name: '納豆（1パック）', protein: 8.3, unit: '1パック', category: 'soy', imageUrl: '/images/natto.png' },
+    {
+      id: '1',
+      name: 'ゆで卵',
+      category: 'egg',
+      protein: 7.5,
+      image: '/images/eggs/boiled-egg.webp',
+      servingSize: '1個',
+    },
+    {
+      id: '2',
+      name: 'ギリシャヨーグルト',
+      category: 'dairy',
+      protein: 10.0,
+      image: '/images/dairy/greek-yogurt.webp',
+      servingSize: '100g',
+    },
   ];
 
-  const originalOpen = window.open;
-  const originalNavigator = window.navigator;
+  let originalOpen: typeof window.open;
+  let originalNavigator: typeof window.navigator;
 
   beforeEach(() => {
+    originalOpen = window.open;
+    originalNavigator = window.navigator;
     window.open = vi.fn();
-    // navigator.shareのモック
-    Object.defineProperty(window, 'navigator', {
-      value: {
-        ...originalNavigator,
-        share: vi.fn(),
-      },
-      writable: true,
-    });
   });
 
   afterEach(() => {
+    cleanup();
     window.open = originalOpen;
-    Object.defineProperty(window, 'navigator', {
-      value: originalNavigator,
-      writable: true,
+    window.navigator = originalNavigator;
+    vi.clearAllMocks();
+  });
+
+  describe('基本的な表示', () => {
+    it('シェアボタンが表示される', () => {
+      const { getByRole } = render(() => <ShareButton selectedFoods={[]} />);
+      const button = getByRole('button', { name: /シェア/i });
+      expect(button).toBeInTheDocument();
+    });
+
+    it('食品が選択されていない場合はボタンが無効になる', () => {
+      const { getByRole } = render(() => <ShareButton selectedFoods={[]} />);
+      const button = getByRole('button', { name: /シェア/i });
+      expect(button).toBeDisabled();
+    });
+
+    it('食品が選択されている場合はボタンが有効になる', () => {
+      const { getByRole } = render(() => <ShareButton selectedFoods={mockFoods} />);
+      const button = getByRole('button', { name: /シェア/i });
+      expect(button).not.toBeDisabled();
     });
   });
 
-  describe('シェアメッセージの生成', () => {
-    it('選択した食品とタンパク質量を含むメッセージを生成する', () => {
-      render(() => <ShareButton selectedFoods={mockFoods} />);
+  describe('シェアメニューの表示', () => {
+    it('ボタンをクリックするとシェアメニューが表示される', async () => {
+      const { getByRole, getByText } = render(() => <ShareButton selectedFoods={mockFoods} />);
+      const button = getByRole('button', { name: /シェア/i });
       
-      const shareButton = screen.getByRole('button', { name: /シェア/i });
-      fireEvent.click(shareButton);
+      fireEvent.click(button);
       
-      // X/Twitterボタンを探す
-      const twitterButton = screen.getByRole('button', { name: /Twitter/i });
-      expect(twitterButton).toBeInTheDocument();
+      await waitFor(() => {
+        expect(getByText('X（Twitter）')).toBeInTheDocument();
+        expect(getByText('LINE')).toBeInTheDocument();
+        expect(getByText('画像を保存')).toBeInTheDocument();
+      });
     });
 
-    it('目標達成時は達成メッセージを含める', () => {
-      const foods = mockFoods; // 合計36.2g
-      render(() => <ShareButton selectedFoods={foods} targetProtein={20} />);
+    it('メニュー外をクリックするとメニューが閉じる', async () => {
+      const { getByRole, queryByText } = render(() => <ShareButton selectedFoods={mockFoods} />);
+      const button = getByRole('button', { name: /シェア/i });
       
-      const shareButton = screen.getByRole('button', { name: /シェア/i });
-      fireEvent.click(shareButton);
+      fireEvent.click(button);
+      await waitFor(() => {
+        expect(queryByText('X（Twitter）')).toBeInTheDocument();
+      });
       
-      // 達成メッセージが含まれることを確認
-      const message = screen.getByTestId('share-message');
-      expect(message.textContent).toContain('目標達成');
-    });
-
-    it('食品名を改行で区切って表示する', () => {
-      render(() => <ShareButton selectedFoods={mockFoods} />);
-      
-      const shareButton = screen.getByRole('button', { name: /シェア/i });
-      fireEvent.click(shareButton);
-      
-      const message = screen.getByTestId('share-message');
-      expect(message.textContent).toContain('サラダチキン');
-      expect(message.textContent).toContain('卵（1個）');
-      expect(message.textContent).toContain('納豆（1パック）');
+      fireEvent.click(document.body);
+      await waitFor(() => {
+        expect(queryByText('X（Twitter）')).not.toBeInTheDocument();
+      });
     });
   });
 
-  describe('X（Twitter）シェア', () => {
-    it('X共有URLを生成して新規ウィンドウで開く', () => {
-      render(() => <ShareButton selectedFoods={mockFoods} />);
+  describe('X（Twitter）シェア機能', () => {
+    it('X（Twitter）ボタンをクリックするとTwitterシェアURLが開く', async () => {
+      const { getByRole, getByText } = render(() => <ShareButton selectedFoods={mockFoods} />);
+      const button = getByRole('button', { name: /シェア/i });
       
-      const shareButton = screen.getByRole('button', { name: /シェア/i });
-      fireEvent.click(shareButton);
-      
-      const twitterButton = screen.getByRole('button', { name: /Twitter/i });
-      fireEvent.click(twitterButton);
+      fireEvent.click(button);
+      await waitFor(() => {
+        const xButton = getByText('X（Twitter）');
+        fireEvent.click(xButton);
+      });
       
       expect(window.open).toHaveBeenCalledWith(
         expect.stringContaining('https://twitter.com/intent/tweet'),
@@ -87,144 +106,177 @@ describe('ShareButton', () => {
       );
     });
 
-    it('ハッシュタグを含める', () => {
-      render(() => <ShareButton selectedFoods={mockFoods} />);
+    it('選択した食品情報が含まれたツイートテキストが生成される', async () => {
+      const { getByRole, getByText } = render(() => <ShareButton selectedFoods={mockFoods} />);
+      const button = getByRole('button', { name: /シェア/i });
       
-      const shareButton = screen.getByRole('button', { name: /シェア/i });
-      fireEvent.click(shareButton);
+      fireEvent.click(button);
+      await waitFor(() => {
+        const xButton = getByText('X（Twitter）');
+        fireEvent.click(xButton);
+      });
       
-      const twitterButton = screen.getByRole('button', { name: /Twitter/i });
-      fireEvent.click(twitterButton);
-      
-      const callArgs = (window.open as any).mock.calls[0][0];
-      // URLエンコードされた文字列を確認
-      expect(decodeURIComponent(callArgs)).toContain('朝たん');
-      expect(decodeURIComponent(callArgs)).toContain('タンパク質');
+      const callArg = (window.open as any).mock.calls[0][0];
+      expect(callArg).toContain(encodeURIComponent('ゆで卵'));
+      expect(callArg).toContain(encodeURIComponent('ギリシャヨーグルト'));
+      expect(callArg).toContain(encodeURIComponent('17.5g'));
     });
   });
 
-  describe('LINEシェア', () => {
-    it('LINE共有URLを生成して新規ウィンドウで開く', () => {
-      render(() => <ShareButton selectedFoods={mockFoods} />);
+  describe('LINEシェア機能', () => {
+    it('LINEボタンをクリックするとLINEシェアURLが開く', async () => {
+      const { getByRole, getByText } = render(() => <ShareButton selectedFoods={mockFoods} />);
+      const button = getByRole('button', { name: /シェア/i });
       
-      const shareButton = screen.getByRole('button', { name: /シェア/i });
-      fireEvent.click(shareButton);
-      
-      const lineButton = screen.getByRole('button', { name: /LINE/i });
-      fireEvent.click(lineButton);
+      fireEvent.click(button);
+      await waitFor(() => {
+        const lineButton = getByText('LINE');
+        fireEvent.click(lineButton);
+      });
       
       expect(window.open).toHaveBeenCalledWith(
         expect.stringContaining('https://social-plugins.line.me/lineit/share'),
         '_blank'
       );
     });
+
+    it('選択した食品情報が含まれたメッセージが生成される', async () => {
+      const { getByRole, getByText } = render(() => <ShareButton selectedFoods={mockFoods} />);
+      const button = getByRole('button', { name: /シェア/i });
+      
+      fireEvent.click(button);
+      await waitFor(() => {
+        const lineButton = getByText('LINE');
+        fireEvent.click(lineButton);
+      });
+      
+      const callArg = (window.open as any).mock.calls[0][0];
+      expect(callArg).toContain(encodeURIComponent('ゆで卵'));
+      expect(callArg).toContain(encodeURIComponent('ギリシャヨーグルト'));
+      expect(callArg).toContain(encodeURIComponent('17.5g'));
+    });
   });
 
-  describe('Web Share API', () => {
-    it('対応ブラウザではWeb Share APIを使用する', async () => {
-      render(() => <ShareButton selectedFoods={mockFoods} useWebShareApi={true} />);
+  describe('画像生成・保存機能', () => {
+    it('画像を保存ボタンをクリックすると画像が生成される', async () => {
+      const mockCanvas = document.createElement('canvas');
+      const mockContext = {
+        fillStyle: '',
+        fillRect: vi.fn(),
+        font: '',
+        textAlign: '',
+        fillText: vi.fn(),
+        drawImage: vi.fn(),
+        measureText: vi.fn().mockReturnValue({ width: 100 }),
+      };
       
-      const shareButton = screen.getByRole('button', { name: /シェア/i });
-      fireEvent.click(shareButton);
+      mockCanvas.getContext = vi.fn().mockReturnValue(mockContext);
+      document.createElement = vi.fn().mockReturnValue(mockCanvas);
       
-      const nativeShareButton = screen.getByRole('button', { name: /その他/i });
-      fireEvent.click(nativeShareButton);
-      
-      expect(navigator.share).toHaveBeenCalledWith({
-        title: expect.stringContaining('朝たん'),
-        text: expect.any(String),
-        url: expect.any(String),
+      mockCanvas.toBlob = vi.fn().mockImplementation((callback) => {
+        callback(new Blob(['test'], { type: 'image/png' }));
       });
+      
+      const { getByRole, getByText } = render(() => <ShareButton selectedFoods={mockFoods} />);
+      const button = getByRole('button', { name: /シェア/i });
+      
+      fireEvent.click(button);
+      await waitFor(() => {
+        const saveButton = getByText('画像を保存');
+        fireEvent.click(saveButton);
+      });
+      
+      expect(mockContext.fillRect).toHaveBeenCalled();
+      expect(mockContext.fillText).toHaveBeenCalled();
     });
 
-    it('Web Share API非対応ブラウザではボタンを非表示にする', () => {
-      // navigator.shareを削除
-      Object.defineProperty(window, 'navigator', {
-        value: {
-          ...originalNavigator,
-          share: undefined,
-        },
+    it('生成された画像がダウンロードされる', async () => {
+      const mockCanvas = document.createElement('canvas');
+      const mockContext = {
+        fillStyle: '',
+        fillRect: vi.fn(),
+        font: '',
+        textAlign: '',
+        fillText: vi.fn(),
+        drawImage: vi.fn(),
+        measureText: vi.fn().mockReturnValue({ width: 100 }),
+      };
+      
+      mockCanvas.getContext = vi.fn().mockReturnValue(mockContext);
+      document.createElement = vi.fn().mockReturnValue(mockCanvas);
+      
+      const mockLink = document.createElement('a');
+      mockLink.click = vi.fn();
+      const createElementSpy = vi.spyOn(document, 'createElement');
+      createElementSpy.mockImplementation((tag: string) => {
+        if (tag === 'canvas') return mockCanvas;
+        if (tag === 'a') return mockLink;
+        return document.createElement(tag);
+      });
+      
+      mockCanvas.toBlob = vi.fn().mockImplementation((callback) => {
+        callback(new Blob(['test'], { type: 'image/png' }));
+      });
+      
+      URL.createObjectURL = vi.fn().mockReturnValue('blob:test');
+      URL.revokeObjectURL = vi.fn();
+      
+      const { getByRole, getByText } = render(() => <ShareButton selectedFoods={mockFoods} />);
+      const button = getByRole('button', { name: /シェア/i });
+      
+      fireEvent.click(button);
+      await waitFor(() => {
+        const saveButton = getByText('画像を保存');
+        fireEvent.click(saveButton);
+      });
+      
+      await waitFor(() => {
+        expect(mockLink.download).toContain('asatan');
+        expect(mockLink.href).toBe('blob:test');
+        expect(mockLink.click).toHaveBeenCalled();
+      });
+      
+      createElementSpy.mockRestore();
+    });
+  });
+
+  describe('Web Share API対応', () => {
+    it('Web Share APIが使用可能な場合はネイティブシェアも表示される', async () => {
+      Object.defineProperty(window.navigator, 'share', {
+        value: vi.fn(),
         writable: true,
       });
       
-      render(() => <ShareButton selectedFoods={mockFoods} useWebShareApi={true} />);
+      const { getByRole, getByText } = render(() => <ShareButton selectedFoods={mockFoods} />);
+      const button = getByRole('button', { name: /シェア/i });
       
-      const shareButton = screen.getByRole('button', { name: /シェア/i });
-      fireEvent.click(shareButton);
-      
-      const nativeShareButton = screen.queryByRole('button', { name: /その他/i });
-      expect(nativeShareButton).not.toBeInTheDocument();
-    });
-  });
-
-  describe('画像生成機能', () => {
-    it('Canvas APIを使用してシェア画像を生成する', async () => {
-      const createElementSpy = vi.spyOn(document, 'createElement');
-      
-      render(() => <ShareButton selectedFoods={mockFoods} generateImage={true} />);
-      
-      const shareButton = screen.getByRole('button', { name: /シェア/i });
-      fireEvent.click(shareButton);
-      
-      const imageButton = screen.getByRole('button', { name: /画像/i });
-      expect(imageButton).toBeInTheDocument();
-      
-      // Canvas作成のテストはスキップ（jsdom環境の制限）
-      // 実際のブラウザ環境では動作することを確認済み
+      fireEvent.click(button);
+      await waitFor(() => {
+        expect(getByText('その他のアプリ')).toBeInTheDocument();
+      });
     });
 
-    it.skip('生成した画像をダウンロードできる', async () => {
-      const linkElement = document.createElement('a');
-      const clickSpy = vi.spyOn(linkElement, 'click');
-      const originalCreateElement = document.createElement.bind(document);
-      vi.spyOn(document, 'createElement').mockImplementation((tagName) => {
-        if (tagName === 'a') return linkElement;
-        return originalCreateElement(tagName);
+    it('ネイティブシェアボタンをクリックするとWeb Share APIが呼ばれる', async () => {
+      const mockShare = vi.fn().mockResolvedValue(undefined);
+      Object.defineProperty(window.navigator, 'share', {
+        value: mockShare,
+        writable: true,
       });
       
-      render(() => <ShareButton selectedFoods={mockFoods} generateImage={true} />);
+      const { getByRole, getByText } = render(() => <ShareButton selectedFoods={mockFoods} />);
+      const button = getByRole('button', { name: /シェア/i });
       
-      const shareButton = screen.getByRole('button', { name: /シェア/i });
-      fireEvent.click(shareButton);
+      fireEvent.click(button);
+      await waitFor(() => {
+        const nativeButton = getByText('その他のアプリ');
+        fireEvent.click(nativeButton);
+      });
       
-      const imageButton = screen.getByRole('button', { name: /画像/i });
-      fireEvent.click(imageButton);
-      
-      // Canvas生成待ち
-      await new Promise(resolve => setTimeout(resolve, 100));
-      
-      expect(clickSpy).toHaveBeenCalled();
-    });
-  });
-
-  describe('UIの表示', () => {
-    it('シェアボタンが表示される', () => {
-      render(() => <ShareButton selectedFoods={mockFoods} />);
-      
-      const shareButton = screen.getByRole('button', { name: /シェア/i });
-      expect(shareButton).toBeInTheDocument();
-    });
-
-    it('食品が選択されていない場合はボタンを無効化', () => {
-      render(() => <ShareButton selectedFoods={[]} />);
-      
-      const shareButton = screen.getByRole('button', { name: /シェア/i });
-      expect(shareButton).toBeDisabled();
-    });
-
-    it('シェアモーダルを開閉できる', () => {
-      render(() => <ShareButton selectedFoods={mockFoods} />);
-      
-      const shareButton = screen.getByRole('button', { name: /シェア/i });
-      
-      // モーダルを開く
-      fireEvent.click(shareButton);
-      expect(screen.getByTestId('share-modal')).toBeInTheDocument();
-      
-      // モーダルを閉じる
-      const closeButton = screen.getByRole('button', { name: /閉じる/i });
-      fireEvent.click(closeButton);
-      expect(screen.queryByTestId('share-modal')).not.toBeInTheDocument();
+      expect(mockShare).toHaveBeenCalledWith({
+        title: expect.stringContaining('朝たんアプリ'),
+        text: expect.stringContaining('ゆで卵'),
+        url: expect.any(String),
+      });
     });
   });
 });

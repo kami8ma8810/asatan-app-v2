@@ -72,9 +72,6 @@ const App: Component = () => {
             <div class="app-actions">
               <ShareButton 
                 selectedFoods={getSelectedFoodsList()}
-                targetProtein={20}
-                generateImage={true}
-                useWebShareApi={true}
               />
             </div>
           </Show>

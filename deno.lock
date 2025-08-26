@@ -203,6 +203,7 @@
   "workspace": {
     "packageJson": {
       "dependencies": [
+        "npm:@axe-core/playwright@^4.10.2",
         "npm:@playwright/test@^1.55.0",
         "npm:@solidjs/testing-library@~0.8.10",
         "npm:@testing-library/jest-dom@^6.8.0",

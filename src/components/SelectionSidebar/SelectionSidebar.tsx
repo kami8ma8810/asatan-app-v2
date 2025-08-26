@@ -145,9 +145,6 @@ export const SelectionSidebar: Component<SelectionSidebarProps> = (props) => {
           <div class={styles.shareSection}>
             <ShareButton 
               selectedFoods={props.selectedFoods}
-              targetProtein={props.targetProtein || 20}
-              generateImage={true}
-              useWebShareApi={true}
             />
           </div>
         </Show>

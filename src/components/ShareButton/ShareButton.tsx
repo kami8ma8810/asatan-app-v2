@@ -1,74 +1,64 @@
-import { type Component, createSignal, Show, For } from 'solid-js';
-import { Portal } from 'solid-js/web';
+import { type Component, createSignal, Show, onCleanup } from 'solid-js';
 import type { Food } from '../../models/Food';
 import styles from './ShareButton.module.css';
 
 interface ShareButtonProps {
   selectedFoods: Food[];
-  targetProtein?: number;
-  useWebShareApi?: boolean;
-  generateImage?: boolean;
 }
 
 export const ShareButton: Component<ShareButtonProps> = (props) => {
-  const [showModal, setShowModal] = createSignal(false);
-  const [imageDataUrl, setImageDataUrl] = createSignal<string | null>(null);
+  const [showMenu, setShowMenu] = createSignal(false);
 
   const totalProtein = () => {
     return props.selectedFoods.reduce((sum, food) => sum + food.protein, 0);
   };
 
-  const isTargetMet = () => {
-    return props.targetProtein ? totalProtein() >= props.targetProtein : false;
-  };
+  const isDisabled = () => props.selectedFoods.length === 0;
 
-  const generateShareMessage = () => {
-    const protein = totalProtein();
-    const foods = props.selectedFoods.map(f => `・${f.name}`).join('\n');
-    const achievement = isTargetMet() ? '【目標達成！】' : '';
+  const generateShareText = () => {
+    if (props.selectedFoods.length === 0) return '';
     
-    return `今日の朝たん計算 ${achievement}
+    const foods = props.selectedFoods.map(food => `・${food.name}（${food.protein}g）`).join('\n');
+    const total = totalProtein().toFixed(1);
+    const achievement = totalProtein() >= 20 ? '🎯 目標達成！' : '';
+    
+    return `今日の朝たん！タンパク質 ${total}g摂取しました！${achievement}
 
-選んだ食品：
 ${foods}
 
-合計タンパク質: ${protein.toFixed(1)}g
-
-#朝たん #タンパク質 #朝食 #健康
-https://asatan-app.vercel.app`;
+#朝たん #タンパク質 #健康習慣`;
   };
 
   const shareToTwitter = () => {
-    const message = encodeURIComponent(generateShareMessage());
-    const url = `https://twitter.com/intent/tweet?text=${message}`;
-    window.open(url, '_blank', 'noopener,noreferrer');
+    const text = generateShareText();
+    const url = window.location.href;
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
+    window.open(twitterUrl, '_blank');
+    setShowMenu(false);
   };
 
   const shareToLine = () => {
-    const message = encodeURIComponent(generateShareMessage());
-    const url = `https://social-plugins.line.me/lineit/share?url=https://asatan-app.vercel.app&text=${message}`;
-    window.open(url, '_blank', 'noopener,noreferrer');
+    const text = generateShareText();
+    const url = window.location.href;
+    const lineUrl = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`;
+    window.open(lineUrl, '_blank');
+    setShowMenu(false);
   };
 
 
-  const shareToEmail = () => {
-    const subject = encodeURIComponent('朝たん計算結果');
-    const body = encodeURIComponent(generateShareMessage());
-    window.location.href = `mailto:?subject=${subject}&body=${body}`;
-  };
-
-  const shareNative = async () => {
+  const shareWithWebShareApi = async () => {
     if (!navigator.share) return;
     
     try {
       await navigator.share({
-        title: '朝たん計算結果',
-        text: generateShareMessage(),
-        url: 'https://asatan-app.vercel.app',
+        title: '朝たんアプリ - 今日のタンパク質',
+        text: generateShareText(),
+        url: window.location.href,
       });
-    } catch (error) {
-      console.error('Share failed:', error);
+    } catch (err) {
+      console.log('Share failed:', err);
     }
+    setShowMenu(false);
   };
 
   const generateImage = async () => {
@@ -76,175 +66,160 @@ https://asatan-app.vercel.app`;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // キャンバスサイズ設定
-    canvas.width = 1200;
-    canvas.height = 630;
+    // キャンバスサイズ設定（Instagram用正方形）
+    canvas.width = 1080;
+    canvas.height = 1080;
 
-    // 背景
-    const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-    gradient.addColorStop(0, '#ffcb05');
-    gradient.addColorStop(1, '#ffd633');
-    ctx.fillStyle = gradient;
+    // 背景色
+    ctx.fillStyle = '#FFF8DC';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // タイトル
-    ctx.fillStyle = '#ffffff';
+    ctx.fillStyle = '#333333';
     ctx.font = 'bold 60px sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('朝たん計算結果', canvas.width / 2, 100);
+    ctx.fillText('今日の朝たん！', canvas.width / 2, 120);
+
+    // タンパク質合計
+    ctx.font = 'bold 80px sans-serif';
+    ctx.fillStyle = '#FF6B6B';
+    ctx.fillText(`タンパク質 ${totalProtein().toFixed(1)}g`, canvas.width / 2, 240);
 
     // 達成状態
-    if (isTargetMet()) {
-      ctx.font = 'bold 48px sans-serif';
-      ctx.fillText('目標達成！', canvas.width / 2, 180);
+    if (totalProtein() >= 20) {
+      ctx.font = '50px sans-serif';
+      ctx.fillStyle = '#4CAF50';
+      ctx.fillText('🎯 目標達成！', canvas.width / 2, 320);
     }
 
-    // タンパク質量
-    ctx.font = 'bold 120px sans-serif';
-    ctx.fillStyle = '#2c5aa0';
-    ctx.fillText(`${totalProtein().toFixed(1)}g`, canvas.width / 2, 350);
-
     // 食品リスト
-    ctx.font = '32px sans-serif';
+    let yPosition = 420;
+    ctx.font = '36px sans-serif';
     ctx.fillStyle = '#333333';
     ctx.textAlign = 'left';
-    const startY = 420;
-    props.selectedFoods.slice(0, 5).forEach((food, index) => {
-      ctx.fillText(`・${food.name} (${food.protein}g)`, 100, startY + index * 40);
+    
+    props.selectedFoods.forEach(food => {
+      const text = `• ${food.name} (${food.protein}g)`;
+      ctx.fillText(text, 100, yPosition);
+      yPosition += 60;
     });
 
-    // URL
+    // フッター
     ctx.font = '24px sans-serif';
     ctx.fillStyle = '#666666';
     ctx.textAlign = 'center';
-    ctx.fillText('asatan-app.vercel.app', canvas.width / 2, canvas.height - 40);
+    ctx.fillText('#朝たん #タンパク質 #健康習慣', canvas.width / 2, canvas.height - 60);
 
-    // データURLに変換
-    const dataUrl = canvas.toDataURL('image/png');
-    setImageDataUrl(dataUrl);
-
-    // ダウンロード
-    const link = document.createElement('a');
-    link.download = `asatan_${new Date().getTime()}.png`;
-    link.href = dataUrl;
-    link.click();
+    // 画像をダウンロード
+    canvas.toBlob((blob) => {
+      if (!blob) return;
+      
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.download = `asatan_${new Date().toISOString().split('T')[0]}.png`;
+      link.href = url;
+      link.click();
+      URL.revokeObjectURL(url);
+    }, 'image/png');
+    
+    setShowMenu(false);
   };
 
-  const hasWebShareApi = () => {
-    return props.useWebShareApi && typeof navigator.share === 'function';
+  // メニュー外クリックで閉じる
+  const handleClickOutside = (event: MouseEvent) => {
+    const target = event.target as HTMLElement;
+    if (!target.closest(`.${styles.shareContainer}`)) {
+      setShowMenu(false);
+    }
   };
+
+  // メニューが開いているときだけイベントリスナーを追加
+  const handleMenuToggle = () => {
+    const newState = !showMenu();
+    setShowMenu(newState);
+    
+    if (newState) {
+      setTimeout(() => {
+        document.addEventListener('click', handleClickOutside);
+      }, 0);
+    } else {
+      document.removeEventListener('click', handleClickOutside);
+    }
+  };
+
+  onCleanup(() => {
+    document.removeEventListener('click', handleClickOutside);
+  });
 
   return (
-    <>
+    <div class={styles.shareContainer}>
       <button
         class={styles.shareButton}
-        onClick={() => setShowModal(true)}
-        disabled={props.selectedFoods.length === 0}
-        aria-haspopup="dialog"
-        aria-expanded={showModal()}
-        type="button"
+        onClick={handleMenuToggle}
+        disabled={isDisabled()}
+        aria-label="シェア"
       >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <circle cx="18" cy="5" r="3" />
+          <circle cx="6" cy="12" r="3" />
+          <circle cx="18" cy="19" r="3" />
+          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+          <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+        </svg>
         シェア
       </button>
 
-      <Show when={showModal()}>
-        <Portal mount={document.body}>
-          <div 
-            class={styles.modalOverlay} 
-            onClick={() => setShowModal(false)}
-            role="presentation"
-            aria-hidden="true"
+      <Show when={showMenu()}>
+        <div class={styles.shareMenu}>
+          <button
+            class={styles.shareMenuItem}
+            onClick={shareToTwitter}
           >
-            <div 
-              class={styles.modal} 
-              onClick={(e) => e.stopPropagation()} 
-              data-testid="share-modal"
-              role="dialog"
-              aria-modal="true"
-              aria-labelledby="share-modal-title"
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+            </svg>
+            X（Twitter）
+          </button>
+
+          <button
+            class={styles.shareMenuItem}
+            onClick={shareToLine}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="#00B900">
+              <path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.404-.105-.51-.29l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.349 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/>
+            </svg>
+            LINE
+          </button>
+
+          <button
+            class={styles.shareMenuItem}
+            onClick={generateImage}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+              <circle cx="8.5" cy="8.5" r="1.5" />
+              <polyline points="21 15 16 10 5 21" />
+            </svg>
+            画像を保存
+          </button>
+
+          <Show when={navigator.share}>
+            <button
+              class={styles.shareMenuItem}
+              onClick={shareWithWebShareApi}
             >
-              <div class={styles.modalHeader}>
-                <h3 id="share-modal-title">シェアする</h3>
-                <button
-                  class={styles.closeButton}
-                  onClick={() => setShowModal(false)}
-                  type="button"
-                  title="閉じる"
-                >
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="閉じる">
-                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                  </svg>
-                </button>
-              </div>
-
-              <div class={styles.modalContent}>
-              <div 
-                class={styles.shareMessage} 
-                data-testid="share-message"
-              >
-                <pre>{generateShareMessage()}</pre>
-              </div>
-
-              <div class={styles.shareButtons}>
-                <button
-                  class={`${styles.shareOption} ${styles.twitter}`}
-                  onClick={shareToTwitter}
-                  type="button"
-                >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                  </svg>
-                  <span>X (Twitter)</span>
-                </button>
-
-                <button
-                  class={`${styles.shareOption} ${styles.line}`}
-                  onClick={shareToLine}
-                  type="button"
-                >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                    <path d="M12 2C6.48 2 2 5.28 2 9.25c0 3.45 3.4 6.34 7.97 7.05.31.07.73.21.84.48.1.25.06.64.03.9l-.13.79c-.04.23-.19 1.13.99.62 1.18-.51 6.37-3.75 8.7-6.42C21.95 10.85 22 9.31 22 9.25 22 5.28 17.52 2 12 2zm-4.51 10.5h-1.5c-.28 0-.5-.22-.5-.5v-3.5c0-.28.22-.5.5-.5s.5.22.5.5v3h1c.28 0 .5.22.5.5s-.22.5-.5.5zm2.5 0c-.28 0-.5-.22-.5-.5v-3.5c0-.28.22-.5.5-.5s.5.22.5.5v3.5c0 .28-.22.5-.5.5zm4.5 0c-.21 0-.4-.14-.47-.34l-1.03-2.76v2.6c0 .28-.22.5-.5.5s-.5-.22-.5-.5v-3.5c0-.22.14-.41.34-.47.2-.07.42.02.53.21l1.13 3.02 1.13-3.02c.11-.19.33-.28.53-.21.2.06.34.25.34.47v3.5c0 .28-.22.5-.5.5s-.5-.22-.5-.5v-2.6l-1.03 2.76c-.07.2-.26.34-.47.34zm3.5 0h-2c-.28 0-.5-.22-.5-.5v-3.5c0-.28.22-.5.5-.5h2c.28 0 .5.22.5.5s-.22.5-.5.5h-1.5v.75h1.5c.28 0 .5.22.5.5s-.22.5-.5.5h-1.5v.75h1.5c.28 0 .5.22.5.5s-.22.5-.5.5z"/>
-                  </svg>
-                  <span>LINE</span>
-                </button>
-
-                <button
-                  class={`${styles.shareOption} ${styles.email}`}
-                  onClick={shareToEmail}
-                  type="button"
-                >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                    <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
-                  </svg>
-                  <span>メール</span>
-                </button>
-
-                <Show when={props.generateImage}>
-                  <button
-                    class={`${styles.shareOption} ${styles.image}`}
-                    onClick={generateImage}
-                    type="button"
-                  >
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                      <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
-                    </svg>
-                    <span>画像で保存</span>
-                  </button>
-                </Show>
-
-              </div>
-
-              <Show when={imageDataUrl()}>
-                <div class={styles.generatedImage}>
-                  <img src={imageDataUrl()!} alt="朝たん計算結果のシェア画像" />
-                </div>
-              </Show>
-            </div>
-          </div>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <circle cx="18" cy="5" r="3" />
+                <circle cx="6" cy="12" r="3" />
+                <circle cx="18" cy="19" r="3" />
+                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+              </svg>
+              その他のアプリ
+            </button>
+          </Show>
         </div>
-        </Portal>
       </Show>
-    </>
+    </div>
   );
 };

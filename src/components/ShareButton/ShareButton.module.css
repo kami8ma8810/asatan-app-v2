@@ -1,347 +1,128 @@
-/* Material Design 3 Share Button with Morning Theme */
+.shareContainer {
+  position: relative;
+  display: inline-block;
+}
+
 .shareButton {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--spacing-2);
-  padding: var(--spacing-2) var(--spacing-4);
-  background: var(--color-primary-accessible);
-  color: var(--color-on-primary);
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
   border: none;
-  border-radius: var(--radius-full);
-  font-size: var(--font-size-label-large);
-  font-weight: var(--font-weight-medium);
-  font-family: var(--font-family-sans);
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: bold;
   cursor: pointer;
-  transition: all var(--duration-medium) var(--easing-standard);
-  box-shadow: var(--shadow-elevation-2);
-  min-height: 40px;
-  position: relative;
-  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  min-height: 44px;
 }
 
-/* Ripple effect removed for cleaner interaction */
-
 .shareButton:hover:not(:disabled) {
-  box-shadow: var(--shadow-elevation-3);
-  background: var(--color-primary-dark);
-  filter: brightness(0.9);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
 }
 
 .shareButton:focus-visible {
-  outline: 2px solid var(--color-primary);
+  outline: 2px solid #667eea;
   outline-offset: 2px;
 }
 
 .shareButton:disabled {
-  opacity: 0.38;
+  opacity: 0.5;
   cursor: not-allowed;
-  box-shadow: none;
+  transform: none;
 }
 
-/* Modal Overlay - Material Scrim */
-.modalOverlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.32);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999; /* 最上位に設定 */
-  animation: fadeIn var(--duration-short) var(--easing-standard);
-  backdrop-filter: blur(4px);
-}
-
-/* Modal - Material Dialog */
-.modal {
-  background: var(--color-surface);
-  border-radius: var(--radius-extra-large);
-  width: 90%;
-  max-width: 600px;
-  max-height: 90vh;
-  overflow: hidden;
-  box-shadow: var(--shadow-elevation-5);
-  animation: slideUpScale var(--duration-medium) var(--easing-decelerate);
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  z-index: 10000; /* オーバーレイより上に */
-}
-
-@keyframes slideUpScale {
-  from {
-    transform: translateY(30px) scale(0.95);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0) scale(1);
-    opacity: 1;
-  }
-}
-
-/* Modal Header */
-.modalHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: var(--spacing-5) var(--spacing-5) var(--spacing-4);
-  border-bottom: 1px solid var(--color-outline-variant);
-}
-
-.modalHeader h3 {
-  margin: 0;
-  font-size: var(--font-size-headline-small);
-  font-weight: var(--font-weight-regular);
-  color: var(--color-on-surface);
-}
-
-/* Close Button - Material Icon Button */
-.closeButton {
-  background: none;
-  border: none;
-  width: 40px;
-  height: 40px;
-  border-radius: var(--radius-full);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all var(--duration-short) var(--easing-standard);
-  color: var(--color-on-surface-variant);
-  font-size: var(--font-size-title-medium);
-}
-
-.closeButton:hover {
-  background: var(--color-surface-variant);
-  color: var(--color-on-surface);
-}
-
-.closeButton svg {
+.shareButton svg {
   width: 24px;
   height: 24px;
 }
 
-.closeButton:focus-visible {
-  outline: 2px solid var(--color-primary);
-  outline-offset: -2px;
+.shareMenu {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  padding: 0.5rem;
+  min-width: 220px;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease;
 }
 
-/* Modal Content */
-.modalContent {
-  padding: var(--spacing-5);
-  flex: 1;
-  overflow-y: auto;
-}
-
-/* Share Message Preview */
-.shareMessage {
-  background: var(--color-surface-variant);
-  border-radius: var(--radius-medium);
-  padding: var(--spacing-4);
-  margin-bottom: var(--spacing-5);
-  max-height: 200px;
-  overflow-y: auto;
-  border: 1px solid var(--color-outline-variant);
-}
-
-.shareMessage pre {
-  margin: 0;
-  font-family: var(--font-family-mono);
-  font-size: var(--font-size-body-medium);
-  line-height: var(--line-height-body);
-  color: var(--color-on-surface);
-  white-space: pre-wrap;
-  word-wrap: break-word;
-}
-
-/* Share Buttons Grid */
-.shareButtons {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: var(--spacing-3);
-}
-
-/* Share Option Button - Material Outlined Button */
-.shareOption {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: var(--spacing-2);
-  padding: var(--spacing-4) var(--spacing-3);
-  background: #ffffff;
-  border: 1px solid var(--color-outline);
-  border-radius: var(--radius-medium);
-  cursor: pointer;
-  transition: all var(--duration-short) var(--easing-standard);
-  font-size: var(--font-size-label-large);
-  font-weight: 600;
-  color: var(--color-on-surface);
-  min-height: 64px;
-  position: relative;
-  overflow: hidden;
-}
-
-.shareOption svg {
-  width: 24px;
-  height: 24px;
-  flex-shrink: 0;
-}
-
-.shareOption span {
-  margin-top: var(--spacing-1);
-}
-
-/* Ripple effect removed for share options */
-
-.shareOption:hover {
-  background: var(--color-surface-variant);
-  border-color: var(--color-primary);
-  box-shadow: var(--shadow-elevation-2);
-}
-
-.shareOption:focus-visible {
-  outline: 2px solid var(--color-primary);
-  outline-offset: -2px;
-}
-
-/* Platform-specific colors with morning theme - WCAG AA compliant */
-.shareOption.twitter {
-  border-color: #1a5490;
-  color: #1a5490;
-  border-width: 2px;
-  font-weight: 600;
-}
-
-.shareOption.twitter:hover {
-  background: #f0f7ff;
-  border-color: #0d3d70;
-  color: #0d3d70;
-}
-
-.shareOption.line {
-  border-color: #0b6e0b;
-  color: #0b6e0b;
-  border-width: 2px;
-  font-weight: 600;
-}
-
-.shareOption.line:hover {
-  background: #f0fff0;
-  border-color: #064f06;
-  color: #064f06;
-}
-
-.shareOption.image {
-  border-color: #8b3a00;
-  color: #8b3a00;
-  border-width: 2px;
-  font-weight: 600;
-}
-
-.shareOption.image:hover {
-  background: #fff5f0;
-  border-color: #662a00;
-  color: #662a00;
-}
-
-.shareOption.email {
-  border-color: #7a5000;
-  color: #7a5000;
-  border-width: 2px;
-  font-weight: 600;
-}
-
-.shareOption.email:hover {
-  background: #fffaf0;
-  border-color: #5c3c00;
-  color: #5c3c00;
-}
-
-/* Generated Image Container */
-.generatedImage {
-  margin-top: var(--spacing-5);
-  border-radius: var(--radius-medium);
-  overflow: hidden;
-  box-shadow: var(--shadow-elevation-2);
-  background: var(--color-surface-variant);
-  padding: var(--spacing-1);
-}
-
-.generatedImage img {
-  width: 100%;
-  height: auto;
-  display: block;
-  border-radius: var(--radius-small);
-}
-
-/* Animations */
 @keyframes fadeIn {
   from {
     opacity: 0;
+    transform: translateY(-10px);
   }
   to {
     opacity: 1;
+    transform: translateY(0);
   }
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .modal {
-    width: 95%;
-    max-width: none;
-    margin: var(--spacing-3);
-  }
-  
-  .modalHeader {
-    padding: var(--spacing-4);
-  }
-  
-  .modalContent {
-    padding: var(--spacing-4);
-  }
-  
-  .shareButtons {
-    grid-template-columns: 1fr 1fr;
-    gap: var(--spacing-2);
-  }
-  
-  .shareOption {
-    padding: var(--spacing-3);
-    font-size: var(--font-size-label-medium);
-    min-height: 56px;
+.shareMenuItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  text-align: left;
+  min-height: 44px;
+}
+
+.shareMenuItem:hover {
+  background-color: #f5f5f5;
+}
+
+.shareMenuItem:focus-visible {
+  outline: 2px solid #667eea;
+  outline-offset: -2px;
+}
+
+.shareMenuItem svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 640px) {
+  .shareMenu {
+    position: fixed;
+    bottom: 1rem;
+    left: 1rem;
+    right: 1rem;
+    top: auto;
+    max-height: 50vh;
+    overflow-y: auto;
   }
 }
 
-@media (max-width: 480px) {
-  .shareButtons {
-    grid-template-columns: 1fr;
+/* ダークモード対応 */
+@media (prefers-color-scheme: dark) {
+  .shareMenu {
+    background: #2d3748;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
   }
   
-  .shareOption {
-    flex-direction: row;
-    justify-content: flex-start;
-    padding: var(--spacing-3) var(--spacing-4);
+  .shareMenuItem {
+    color: #e2e8f0;
   }
   
-  .shareOption svg {
-    margin-right: var(--spacing-2);
+  .shareMenuItem:hover {
+    background-color: #4a5568;
   }
-  
-  .shareOption span {
-    margin-top: 0;
-  }
-}
-
-/* Screen reader only class */
-.srOnly {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border-width: 0;
 }
